@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">NiceTrip</string>
+    <string name="registerPage">Register</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="developer">Developed by Paulonova</string>
+    <string name="register">Click here to Registration</string>
+    <string name="title_activity_register_page">RegisterPageActivity</string>
+    <string name="title_activity_first_page">FirstPage</string>
+    <string name="hello_world">Welcome to the First Page !!!</string>
+
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="user">Username</string>
+    <string name="password">Password</string>
+    <string name="loginConfirm">Confirm</string>
+    <string name="email">Email</string>
+    <string name="cancel">Cancel</string>
+    <string name="savePrefer">Save</string>
+
+    <string name="cb_default">Default</string>
+
+    <string name="error_autentication">Username or Password is wrong! Please, try again..</string>
+    <string name="spending">New Spending</string>
+    <string name="new_trip">New Trip</string>
+    <string name="my_trip">My Trips</string>
+    <string name="configuration">Configurations</string>
+    <string name="title_activity_new_trip">NewTripActivity</string>
+
+    <string name="destination">Destination</string>
+    <string name="text_destination">Write here your Destination:</string>
+    <string name="type_trip">Type of the Trip:</string>
+    <string name="vacation">Vacation</string>
+    <string name="business">Business</string>
+
+    <string name="arrival_date">Arrival Date</string>
+    <string name="exit_date">Exit Date</string>
+    <string name="select">Select</string>
+    <string name="budget">Budget</string>
+    <string name="number_of_people">Number of People:</string>
+    <string name="save_trip">Save your trip</string>
+    <string name="text_budget">Write here your Budget:</string>
+    <string name="title_activity_spending">SpendingActivity</string>
+    <string name="newspend">New Spending</string>
+    <string name="value">Value</string>
+    <string name="select_date">Select Date</string>
+    <string name="title_activity_date_picker">DatePickerActivity</string>
+    <string name="category">Category</string>
+    <string name="description">Description</string>
+    <string name="place">Place</string>
+
+
+
+    <string-array name="category_spend">
+        <item>Food</item>
+        <item>Fuel</item>
+        <item>Transportation</item>
+        <item>Accommodation</item>
+        <item>Others</item>
+    </string-array>
+
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_spend_list">SpendListActivity</string>
+    <string name="title_activity_trip_list">TripListActivity</string>
+    <string name="exit_dashboard">Exit</string>
+    <string name="new_spend">New Spend</string>
+    <string name="remove_trip">Remove Trip</string>
+    <string name="remove_spending">Remove Spending</string>
+    <string name="exit_spending">Exit Spending</string>
+
+    <string name="edit">Edit</string>
+    <string name="new_spend_dialog">New Spend</string>
+    <string name="made_expenses">Expenses Made</string>
+    <string name="remove_dialog">Remove</string>
+    <string name="options">Options</string>
+
+    <string name="trip_confirmation">Are You sure you want to remove?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="preference">Preference</string>
+    <string name="mode_trip_summary">Direct spending to the actual trip..</string>
+    <string name="trip_mode">Trip Mode</string>
+    <string name="default_mode_summary">Set back the Login Page..</string>
+    <string name="set_login_page">Set Login Page</string>
+
+    default_mode_summary
+    <string name="set_value_limit">Set Limit Value %</string>
+    <string name="value_limit_summary">Notify when the spendings are going over the limit</string>
+    <string name="value_limit">Value Limit</string>
+    <string name="title_activity_configurations">Configurations</string>
+
+    <string name="close_alert">This application will close! Are you sure?</string>
+
+
+
+
+
+
+</resources>

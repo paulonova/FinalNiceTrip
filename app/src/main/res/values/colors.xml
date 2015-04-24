@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="title">#ffbb8c28</color>
+    <color name="category_feeding">#ffffdea2</color>
+    <color name="category_accommodation">#c2f0ab4f</color>
+    <color name="category_transport">#ded8bc28</color>
+    <color name="category_others">#ffffb435</color>
+
+    <color name="black_color">#fe000000</color>
+    <color name="orange_color">#ffffae00</color>
+
+</resources>

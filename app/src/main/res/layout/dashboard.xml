@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffe2ab2c"
+        android:orientation="vertical">
+
+
+    <ImageView
+        android:layout_width="167dp"
+        android:layout_height="71dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/nicetrip_text"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffbb8c28">
+
+        <TextView
+            android:id="@+id/new_spending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="80dp"
+            android:clickable="true"
+            android:drawableTop="@drawable/new_spending"
+            android:onClick="selectOption"
+            android:text="@string/spending"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/new_trips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/new_spending"
+            android:layout_marginRight="50dp"
+            android:clickable="true"
+            android:drawableTop="@drawable/new_trip"
+            android:onClick="selectOption"
+            android:text="@string/new_trip"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/my_trips"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/new_spending"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="120dp"
+            android:clickable="true"
+            android:drawableTop="@drawable/my_trips"
+            android:onClick="selectOption"
+            android:text="@string/my_trip"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/configurations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/my_trips"
+            android:layout_alignRight="@id/new_trips"
+            android:clickable="true"
+            android:drawableTop="@drawable/configurations"
+            android:onClick="selectOption"
+            android:text="@string/configuration"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+
+
+    </LinearLayout>

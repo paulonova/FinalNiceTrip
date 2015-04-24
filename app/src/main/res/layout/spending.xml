@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/bkg_papper"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#ffbb8c28"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/newspend"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="157dp"
+            android:layout_height="61dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/nicetrip_text" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:id="@+id/category"
+            android:prompt="@string/category"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/destination"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#fe000000"
+            android:layout_gravity="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textStyle="bold" />
+
+
+
+        <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/tableNewSpending"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:stretchColumns="0,1,">
+
+           <TableRow>
+               <EditText
+                   android:id="@+id/value"
+                   android:drawableLeft="@drawable/budget_icon"
+                   android:hint="@string/value"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:inputType="numberDecimal"/>
+
+               <Button
+                   android:id="@+id/date"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:drawableLeft="@drawable/calendar_icon"
+                   android:text="@string/select_date" />
+
+
+           </TableRow>
+
+            <EditText
+                android:id="@+id/descriptionTxt"
+                android:drawableLeft="@drawable/description_icon"
+                android:hint="@string/description"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"/>
+
+            <EditText
+                android:id="@+id/placeTxt"
+                android:drawableLeft="@drawable/place"
+                android:hint="@string/place"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"/>
+
+            <Button
+                android:id="@+id/spending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="35dp"
+                android:layout_gravity="center"
+                android:drawableLeft="@drawable/budget_icon"
+                android:text="@string/spending" />
+
+
+
+            </TableLayout>
+
+
+
+
+    </LinearLayout>
+
+</ScrollView>
