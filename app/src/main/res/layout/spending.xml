@@ -104,6 +104,7 @@
                 android:layout_marginTop="35dp"
                 android:layout_gravity="center"
                 android:drawableLeft="@drawable/budget_icon"
+                android:onClick="saveSpending"
                 android:text="@string/spending" />
 
 

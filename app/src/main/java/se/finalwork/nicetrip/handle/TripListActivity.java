@@ -4,13 +4,20 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,17 +26,33 @@ import java.util.Map;
 
 
     public class TripListActivity extends ListActivity
-                                    implements AdapterView.OnItemClickListener, DialogInterface.OnClickListener, SimpleAdapter.ViewBinder {
+                                  implements AdapterView.OnItemClickListener, DialogInterface.OnClickListener, SimpleAdapter.ViewBinder {
 
 
-    private AlertDialog dialogConfirmation;
-    private AlertDialog alertDialog;
-    private int selectedTrip;
+        private AlertDialog dialogConfirmation;
+        private AlertDialog alertDialog;
+        private int selectedTrip;
+
+        public static final String LIMIT_VALUE = "limit_value";
+        private DatabaseHelper helper;
+        private SimpleDateFormat dateFormat;
+        private Double limitValue;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        helper = new DatabaseHelper(this);
+        dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+
+        // Instantiate database and retrieve the limit value of the budget..
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String value = preferences.getString(LIMIT_VALUE, "-1");
+        limitValue = Double.valueOf(value);
+
+
+
 
         String[] from = {"image", "destiny", "date", "total", "progressBar"};
         int[] to = {R.id.type_trip, R.id.destiny, R.id.date, R.id.total, R.id.progressBar};
@@ -50,34 +73,84 @@ import java.util.Map;
 
     private List <Map<String, Object>> listTrips(){
 
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql = "SELECT _id, type_trip, destiny, arrive_date, exit_date, budget FROM trip";
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
         trips = new ArrayList<Map<String, Object>>();
 
-        Map<String, Object> item = new HashMap<String, Object>();
-        item.put("image",R.drawable.business);
-        item.put("destiny","Stockholm");
-        item.put("date","02/02/2015 to 05/02/2015");
-        item.put("total","Total Spend: Kr 314,00");
-        item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
-        trips.add(item);
+        for (int i = 0; i <cursor.getCount() ; i++) {
 
-        item = new HashMap<String, Object>();
-        item.put("image",R.drawable.vacations);
-        item.put("destiny","Malmö");
-        item.put("date","05/03/2015 to 05/04/2015");
-        item.put("total","Total Spend: Kr 550,00");
-        item.put("progressBar", new Double[]{650.0, 590.0, 550.0});
-        trips.add(item);
 
-        item = new HashMap<String, Object>();
-        item.put("image",R.drawable.business);
-        item.put("destiny","Göteborg");
-        item.put("date","05/03/2015 to 05/04/2015");
-        item.put("total","Total Spend: Kr 600,00");
-        item.put("progressBar", new Double[]{700.0, 650.0, 600.0});
-        trips.add(item);
+
+            // Getting values from DB..
+            String id = cursor.getString(0);
+            int  typeTrip = cursor.getInt(1);
+            String destiny = cursor.getString(2);
+            String arrivalDate = cursor.getString(3);
+            String exitDate = cursor.getString(4);
+            double budget = cursor.getDouble(5);
+            Log.d("Database Info", "Info: " + id + " - " + typeTrip + " - " + destiny + " - " + arrivalDate + " - " + exitDate + " - " + budget);
+
+            Map<String, Object> item = new HashMap<String, Object>();
+
+            if(typeTrip == Constants.TRIP_VACATIONS){
+                item.put("image", R.drawable.vacations);
+            }else{
+                item.put("image",R.drawable.business);
+            }
+
+            item.put("id", id);
+            item.put("destiny",destiny);
+            item.put("date", arrivalDate + " to " + exitDate);
+
+            double totalSpend = calcTotalSpend(db, id);
+            item.put("total","Total Spend: "+ totalSpend);
+            Log.d("TOTAL_SPEND", "TOTAL: " + totalSpend);
+
+            double alert = budget * limitValue/ 100;
+            Double[] values = new Double[]{budget, alert, totalSpend};
+            item.put("progressBar", values);
+            trips.add(item);
+            cursor.moveToNext();
+
+
+        }
+
+//        Map<String, Object> item = new HashMap<String, Object>();
+//        item.put("image",R.drawable.business);
+//        item.put("destiny","Stockholm");
+//        item.put("date","02/02/2015 to 05/02/2015");
+//        item.put("total","Total Spend: Kr 314,00");
+//        item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
+//        trips.add(item);
+//
+//        item = new HashMap<String, Object>();
+//        item.put("image",R.drawable.vacations);
+//        item.put("destiny","Malmö");
+//        item.put("date","05/03/2015 to 05/04/2015");
+//        item.put("total","Total Spend: Kr 550,00");
+//        item.put("progressBar", new Double[]{650.0, 590.0, 550.0});
+//        trips.add(item);
+//
+//        item = new HashMap<String, Object>();
+//        item.put("image",R.drawable.business);
+//        item.put("destiny","Göteborg");
+//        item.put("date","05/03/2015 to 05/04/2015");
+//        item.put("total","Total Spend: Kr 600,00");
+//        item.put("progressBar", new Double[]{700.0, 650.0, 600.0});
+//        trips.add(item);
 
         return trips;
     }
+
+        private double calcTotalSpend(SQLiteDatabase db, String id) {
+            Cursor cursor = db.rawQuery("SELECT SUM(VALUE) FROM SPENDING WHERE TRIP_ID = ?", new String[]{ id });
+            cursor.moveToFirst();
+            double total = cursor.getDouble(0);
+            cursor.close();
+            return total;
+        }
 
 
     @Override

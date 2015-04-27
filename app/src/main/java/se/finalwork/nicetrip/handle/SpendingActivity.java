@@ -2,6 +2,8 @@ package se.finalwork.nicetrip.handle;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,9 +21,9 @@ import java.util.Calendar;
 
 
 
-public class SpendingActivity extends Activity implements View.OnClickListener {
+public class SpendingActivity extends Activity  { //implements View.OnClickListener
 
-    private int year, month, day;
+    //private int year, month, day;
     private int actualYear, actualMonth, actualDay;
     private int selectedYear, selectedMonth, selectedDay;
     private Button spendDate;
@@ -31,6 +33,8 @@ public class SpendingActivity extends Activity implements View.OnClickListener {
     private EditText value, description, place;
     Calendar calendar = Calendar.getInstance();
     private Spinner category;
+
+    private DatabaseHelper helper;
 
 
     @Override
@@ -54,11 +58,43 @@ public class SpendingActivity extends Activity implements View.OnClickListener {
         selectedDate = selectedYear + "/" + (selectedMonth+1) + "/" + selectedDay;
 
         spendDate = (Button)findViewById(R.id.date);
-        spendDate.setOnClickListener(this);
+        spendDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDate();
+            }
+        });
         updateDate();
 
         spendingBtn = (Button)findViewById(R.id.spending);
 
+        // Prepare access to database..
+        helper = new DatabaseHelper(this);
+
+    }
+
+    public void saveSpending(View v){
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("category", category.getSelectedItem().toString());
+        values.put("date", selectedDate);
+        values.put("value", value.getText().toString());
+        values.put("description", description.getText().toString());
+        values.put("place", place.getText().toString());
+
+        // Show all information to save in DB..
+        Log.d("Saved Informations", "Info: " + category.getSelectedItem().toString() + " - " + selectedDate + " - " +
+                                               value.getText().toString()+ " - " + description.getText().toString() + " - " +
+                                               place.getText().toString());
+
+        long result = db.insert("spending", null, values);
+        if(result != -1){
+            Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
+            finish();
+        }else {
+            Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void updateDate(){
@@ -66,7 +102,6 @@ public class SpendingActivity extends Activity implements View.OnClickListener {
         selectedYear = calendar.get(Calendar.YEAR);
         selectedMonth = calendar.get(Calendar.MONTH);
         selectedDay = calendar.get(Calendar.DAY_OF_MONTH);
-
         selectedDate = selectedYear + "/" + (selectedMonth+1) + "/" + selectedDay;
 
         if(selectedYear > actualYear || selectedMonth > actualMonth || selectedDay > actualDay){
@@ -74,18 +109,12 @@ public class SpendingActivity extends Activity implements View.OnClickListener {
             setDate();
 
         }else{
-            spendDate.setText(selectedYear + "/" + (selectedMonth+1) + "/" + selectedDay);
+            spendDate.setText(selectedDate);
         }
-
 
         Log.d("Button Date","selected Date: " + selectedDate); // Choosen Date!
         Log.d("DATE", "Actual Date: " + actualDate);
     }
-
-    public void setDate(){
-        new DatePickerDialog(SpendingActivity.this,d,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
-    }
-
 
     DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
 
@@ -98,13 +127,19 @@ public class SpendingActivity extends Activity implements View.OnClickListener {
         }
     };
 
-
-
-    @Override
-    public void onClick(View v) {
-
-        setDate();
+    public void setDate(){
+        new DatePickerDialog(SpendingActivity.this,d,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
     }
+
+
+
+
+
+
+//    @Override
+//    public void onClick(View v) {
+//        setDate();
+//    }
 
 
     // Method to show the menu with exit button..

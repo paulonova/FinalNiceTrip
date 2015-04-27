@@ -31,6 +31,7 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
     private Button saveBtn;
 
     private RadioGroup typeTrip;
+    private String typeTripText;
     Calendar arrivalCalendar = Calendar.getInstance();
     Calendar exitCalendar = Calendar.getInstance();
 
@@ -50,12 +51,14 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
         updateArrivalDate();
         updateExitDate();
 
+        destiny = (EditText) findViewById(R.id.destination);
+        radioGroup = (RadioGroup)findViewById(R.id.typeTrip);
+        budget = (EditText)findViewById(R.id.budget);
+        numberPeople = (EditText)findViewById(R.id.number_people);
+
         saveBtn = (Button)findViewById(R.id.save_trip);
 
-        destiny = (EditText) findViewById(R.id.destination);
-        numberPeople = (EditText)findViewById(R.id.number_people);
-        budget = (EditText)findViewById(R.id.budget);
-        radioGroup = (RadioGroup)findViewById(R.id.typeTrip);
+
 
         // Prepare access to database..
         helper = new DatabaseHelper(this);
@@ -112,44 +115,6 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
         new DatePickerDialog(NewTripActivity.this, dExit,exitCalendar.get(Calendar.YEAR),exitCalendar.get(Calendar.MONTH),exitCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    // class with the constants values...
-    public class Constants{
-        public static final int TRIP_VACATIONS = 1;
-        public static final int TRIP_BUSINESS = 2;
-    }
-
-    public void saveTrip(View view){
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put("destiny", destiny.getText().toString());
-        values.put("arrive_date", arrivalBtn.getText().toString());
-        Log.d("Arrive_Date","Date: " + arrivalBtn.getText().toString() );
-        
-        values.put("exit_date", exitBtn.getText().toString());
-        Log.d("Exit_Date","Date: " + exitBtn.getText().toString() );
-        values.put("budget", budget.getText().toString());
-        values.put("number_peoples", numberPeople.getText().toString());
-
-        int type = radioGroup.getCheckedRadioButtonId();
-        if(type == R.id.vacationBtn){
-            values.put("type_trip", Constants.TRIP_VACATIONS);
-        }else{
-            values.put("type_trip", Constants.TRIP_BUSINESS);
-        }
-
-        long result = db.insert("trip", null, values);
-
-        if(result != -1){
-            Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-
-
     public void updateArrivalDate(){
 
         int year = arrivalCalendar.get(Calendar.YEAR);
@@ -170,11 +135,44 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
 
 
 
+    public void saveTrip(View view){
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("destiny", destiny.getText().toString());
+        values.put("arrive_date", arrivalBtn.getText().toString());
+
+        values.put("exit_date", exitBtn.getText().toString());
+        values.put("budget", budget.getText().toString());
+        values.put("number_peoples", numberPeople.getText().toString());
 
 
 
+        int type = radioGroup.getCheckedRadioButtonId();
+        if(type == R.id.vacationBtn){
+            values.put("type_trip", Constants.TRIP_VACATIONS);
+            setTypeTripText(getString(R.string.vacation));
+        }else{
+            values.put("type_trip", Constants.TRIP_BUSINESS);
+            setTypeTripText(getString(R.string.business));
+        }
+
+        // Show all information to save in DB..
+        Log.d("Saved Informations", "Info: " + destiny.getText().toString() + " - " + getTypeTripText() + " - " +
+                                               arrivalBtn.getText().toString()+ " - " + exitBtn.getText().toString() + " - " +
+                                               budget.getText().toString() + " - " + numberPeople.getText().toString());
+
+        long result = db.insert("trip", null, values);
+
+        if(result != -1){
+            Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
+            finish();
+        }else {
+            Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
+        }
 
 
+    }
 
 
 
@@ -220,4 +218,12 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
     }
 
 
+    // Getters and Setters
+    public String getTypeTripText() {
+        return typeTripText;
+    }
+
+    public void setTypeTripText(String typeTripText) {
+        this.typeTripText = typeTripText;
+    }
 }
