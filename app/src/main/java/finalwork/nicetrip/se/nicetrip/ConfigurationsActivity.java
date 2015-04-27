@@ -3,6 +3,7 @@ package finalwork.nicetrip.se.nicetrip;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -52,12 +53,15 @@ public class ConfigurationsActivity extends Activity {
 //                    SharedPreferences prefDefault = getSharedPreferences(LoginActivity.DEFAULT_CONNECTED, Context.MODE_PRIVATE);
 //                    SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
 
-                    SharedPreferences prefDefault = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    SharedPreferences.Editor editor = prefDefault.edit();
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean(LoginActivity.DEFAULT_CONNECTED, false);
-                    editor.apply();
+                    editor.commit();
 
-                    Toast.makeText(getApplicationContext(), "Login Page is now available..", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+
                     return false;
                 }
             });

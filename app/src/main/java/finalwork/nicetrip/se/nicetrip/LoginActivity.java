@@ -15,9 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/**
- * Created by PauloRogério on 2015-02-18.
- */
+
 public class LoginActivity extends Activity {
 
     public static final String DEFAULT_CONNECTED = "be_connected";
@@ -36,13 +34,13 @@ public class LoginActivity extends Activity {
 
         username = (EditText)findViewById(R.id.username);
         password = (EditText)findViewById(R.id.password);
-
         beConnected = (CheckBox)findViewById(R.id.cbDefault);
+
        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean checked = preferences.getBoolean(DEFAULT_CONNECTED, false);
         Log.d("DEFAULT_CONNECTED", "Value: " + checked);
 
-        if(checked){
+        if(!checked){
             //Do nothing
         }else{
             startActivity(new Intent(this, DashboardActivity.class));
@@ -52,20 +50,7 @@ public class LoginActivity extends Activity {
             goToRegister = (TextView)findViewById(R.id.registerLinkTxt);
       }
 
-
-//    public boolean checkDefaultBox(){
-//
-//       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//       checked = preferences.getBoolean(DEFAULT_CONNECTED, false);
-//
-//        if(checked){
-//            beConnected.setChecked(true);
-//        }else{
-//            beConnected.setChecked(false);
-//        }
-//        return checked;
-//    }
-
+    // Confirm Button and fields validation...
     public void confirmOnClick(View v){
         //To insert text in EditText...
         String usernameInfo = username.getText().toString();
@@ -75,7 +60,7 @@ public class LoginActivity extends Activity {
         String username = preferences.getString(RegisterPageActivity.USER_NAME, "");
         String password = preferences.getString(RegisterPageActivity.PASSWORD, "");
 
-        if(usernameInfo.equals("") || passwordInfo.equals("")){
+        if(usernameInfo.equals("") && passwordInfo.equals("")){
             String msg = getString(R.string.error_empty);
             Toast.makeText(getApplicationContext(), msg,Toast.LENGTH_SHORT).show();
 
@@ -96,32 +81,9 @@ public class LoginActivity extends Activity {
             Toast.makeText(getApplicationContext(), msg,Toast.LENGTH_SHORT).show();
         }
 
-        if(usernameInfo.equals("paulo") && passwordInfo.equals("0144")){
-
-            SharedPreferences pref = getPreferences(MODE_PRIVATE);
-            SharedPreferences.Editor editor = preferences.edit();
-
-            editor.putBoolean(DEFAULT_CONNECTED, beConnected.isChecked());
-            editor.commit();
-
-            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-            startActivity(intent);
-            finish();
-
-        }else {
-            String msgError = getString(R.string.error_autentication);
-            Toast toast = Toast.makeText(this, msgError, Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-
     }
 
-
-
-
+    // Text link to Registration DialogBox..
     public void goToRegistration(View v){
 
         Intent intent = new Intent(getApplicationContext(), RegisterPageActivity.class);

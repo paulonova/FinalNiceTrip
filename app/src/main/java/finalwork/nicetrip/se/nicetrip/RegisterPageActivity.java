@@ -62,13 +62,11 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
         switch (v.getId()){
             case R.id.saveBtn:
                 checkInputValues();
-                finish();
-                Toast.makeText(getApplicationContext(), "Register saved successfully", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.cancelBtn:
                 finish();
-                Toast.makeText(getApplicationContext(), "Register cancel successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Register canceled", Toast.LENGTH_SHORT).show();
         }
     }
 

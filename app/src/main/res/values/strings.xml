@@ -5,7 +5,7 @@
     <string name="registerPage">Register</string>
     <string name="action_settings">Settings</string>
 
-    <string name="developer">Developed by Paulonova</string>
+    <string name="developer">Developed by PauloNova</string>
     <string name="register">Click here to Registration</string>
     <string name="title_activity_register_page">RegisterPageActivity</string>
     <string name="title_activity_first_page">FirstPage</string>
@@ -82,7 +82,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="preference">Preference</string>
+    <string name="preference">Settings</string>
     <string name="mode_trip_summary">Direct spending to the actual trip..</string>
     <string name="trip_mode">Trip Mode</string>
     <string name="default_mode_summary">Set back the Login Page..</string>
