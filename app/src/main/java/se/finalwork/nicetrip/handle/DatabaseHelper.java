@@ -1,4 +1,4 @@
-package finalwork.nicetrip.se.nicetrip;
+package se.finalwork.nicetrip.handle;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,7 +31,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        db.execSQL("ALTER TABLE spending ADD COLUMN person TEXT");
+        //db.execSQL("ALTER TABLE spending ADD COLUMN person TEXT");
 
     }
 

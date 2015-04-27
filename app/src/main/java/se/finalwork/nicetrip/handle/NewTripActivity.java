@@ -1,13 +1,12 @@
-package finalwork.nicetrip.se.nicetrip;
+package se.finalwork.nicetrip.handle;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.SyncStateContract;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,14 +14,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import java.util.Calendar;
 
 
-public class NewTripActivity extends Activity implements View.OnClickListener {
+
+public class NewTripActivity extends Activity implements View.OnClickListener  {    //
 
     private int year;
     private int month;
@@ -32,7 +31,8 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
     private Button saveBtn;
 
     private RadioGroup typeTrip;
-    Calendar calendar = Calendar.getInstance();
+    Calendar arrivalCalendar = Calendar.getInstance();
+    Calendar exitCalendar = Calendar.getInstance();
 
     private DatabaseHelper helper;
     private EditText destiny, budget, numberPeople;
@@ -45,10 +45,10 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
 
         arrivalBtn = (Button)findViewById(R.id.arrivalBtn);
         arrivalBtn.setOnClickListener(this);
-
         exitBtn = (Button)findViewById(R.id.exitBtn);
         exitBtn.setOnClickListener(this);
-        updateDate();
+        updateArrivalDate();
+        updateExitDate();
 
         saveBtn = (Button)findViewById(R.id.save_trip);
 
@@ -60,6 +60,56 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
         // Prepare access to database..
         helper = new DatabaseHelper(this);
 
+    }
+
+    // Listener to the DatePicker btn..
+    @Override
+    public void onClick(View v) {
+
+        switch (v.getId()){
+            case R.id.arrivalBtn:
+                setArriveDate();
+                break;
+
+            case R.id.exitBtn:
+                setExitDate();
+                break;
+        }
+    }
+
+    DatePickerDialog.OnDateSetListener dArrival = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            arrivalCalendar.set(Calendar.YEAR,year);
+            arrivalCalendar.set(Calendar.MONTH,monthOfYear);
+            arrivalCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+            updateArrivalDate();
+        }
+    };
+
+    DatePickerDialog.OnDateSetListener dExit = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            exitCalendar.set(Calendar.YEAR,year);
+            exitCalendar.set(Calendar.MONTH,monthOfYear);
+            exitCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+            updateExitDate();
+
+        }
+    };
+
+    public void setArriveDate(){
+
+        new DatePickerDialog(NewTripActivity.this, dArrival,arrivalCalendar.get(Calendar.YEAR),arrivalCalendar.get(Calendar.MONTH),arrivalCalendar.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    public void setExitDate(){
+
+        new DatePickerDialog(NewTripActivity.this, dExit,exitCalendar.get(Calendar.YEAR),exitCalendar.get(Calendar.MONTH),exitCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     // class with the constants values...
@@ -74,7 +124,10 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
         ContentValues values = new ContentValues();
         values.put("destiny", destiny.getText().toString());
         values.put("arrive_date", arrivalBtn.getText().toString());
+        Log.d("Arrive_Date","Date: " + arrivalBtn.getText().toString() );
+        
         values.put("exit_date", exitBtn.getText().toString());
+        Log.d("Exit_Date","Date: " + exitBtn.getText().toString() );
         values.put("budget", budget.getText().toString());
         values.put("number_peoples", numberPeople.getText().toString());
 
@@ -97,48 +150,33 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
     }
 
 
+    public void updateArrivalDate(){
 
+        int year = arrivalCalendar.get(Calendar.YEAR);
+        int month = arrivalCalendar.get(Calendar.MONTH);
+        int day = arrivalCalendar.get(Calendar.DAY_OF_MONTH);
 
-    public void updateDate(){
-        arrivalBtn.setText(calendar.get(Calendar.YEAR) + "/" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH));
-        exitBtn.setText(calendar.get(Calendar.YEAR) + "/" + calendar.get(Calendar.MONTH) + "/" + calendar.get(Calendar.DAY_OF_MONTH));
-
-       /* arrivalBtn.setText(year + "/" + (month+1) + "/" + day);
-        exitBtn.setText(year + "/" + (month+1) + "/" + day);*/
+        arrivalBtn.setText(year + "/" + (month + 1) + "/" + day);
     }
 
-    public void setDate(){
-        new DatePickerDialog(NewTripActivity.this,d,calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)).show();
+    public void updateExitDate(){
+        int year = exitCalendar.get(Calendar.YEAR);
+        int month = exitCalendar.get(Calendar.MONTH);
+        int day = exitCalendar.get(Calendar.DAY_OF_MONTH);
+
+        exitBtn.setText(year + "/" + (month + 1) + "/" + day);
+
     }
 
 
 
-    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            calendar.set(Calendar.YEAR,year);
-            calendar.set(Calendar.MONTH,monthOfYear);
-            calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-            updateDate();
-        }
-    };
 
 
 
-    @Override
-    public void onClick(View v) {
 
-        switch (v.getId()){
-            case R.id.arrivalBtn:
-                setDate();
-                break;
 
-            case R.id.exitBtn:
-                setDate();
-                break;
-        }
-    }
+
+
 
     // Method to show the menu with exit button..
     @Override

@@ -1,4 +1,4 @@
-package finalwork.nicetrip.se.nicetrip;
+package se.finalwork.nicetrip.handle;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -16,9 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 
-/**
- * Created by PAULO NOVA on 2015-03-19.
- */
+
+
     public class TripListActivity extends ListActivity
                                     implements AdapterView.OnItemClickListener, DialogInterface.OnClickListener, SimpleAdapter.ViewBinder {
 

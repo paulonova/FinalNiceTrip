@@ -108,11 +108,13 @@
             <Button
                 android:id="@+id/arrivalBtn"
                 android:drawableLeft="@drawable/calendar_icon"
+                android:onClick="showDatePickerDialog"
                 android:text="@string/select"/>
 
             <Button
                 android:id="@+id/exitBtn"
                 android:drawableLeft="@drawable/calendar_icon"
+                android:onClick="showDatePickerDialog"
                 android:text="@string/select"/>
         </TableRow>
     </TableLayout>

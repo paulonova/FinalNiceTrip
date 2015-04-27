@@ -1,10 +1,12 @@
-package finalwork.nicetrip.se.nicetrip;
+package se.finalwork.nicetrip.handle;
 
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
+
+
 
 public class SplashActivity extends Activity {
 

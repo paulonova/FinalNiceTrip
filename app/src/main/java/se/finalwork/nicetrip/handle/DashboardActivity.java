@@ -1,4 +1,4 @@
-package finalwork.nicetrip.se.nicetrip;
+package se.finalwork.nicetrip.handle;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,8 +9,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
+
+import se.finalwork.nicetrip.handle.R;
 
 
 public class DashboardActivity extends Activity {
