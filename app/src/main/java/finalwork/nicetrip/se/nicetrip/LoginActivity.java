@@ -27,9 +27,7 @@ public class LoginActivity extends Activity {
 
     private Button confirm;
     private TextView goToRegister;
-    private DBRegistration db;
     private AlertDialog alert;
-    private boolean checked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,48 +38,67 @@ public class LoginActivity extends Activity {
         password = (EditText)findViewById(R.id.password);
 
         beConnected = (CheckBox)findViewById(R.id.cbDefault);
-        checkDefaultBox();
+       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean checked = preferences.getBoolean(DEFAULT_CONNECTED, false);
+        Log.d("DEFAULT_CONNECTED", "Value: " + checked);
 
-        // Check if default checkBox is checked...
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        boolean connected = preferences.getBoolean(DEFAULT_CONNECTED, false);
-
-        if(connected){
+        if(checked){
+            //Do nothing
+        }else{
             startActivity(new Intent(this, DashboardActivity.class));
             finish();
         }
-
-        confirm = (Button)findViewById(R.id.confirmBtn);
-        goToRegister = (TextView)findViewById(R.id.registerLinkTxt);
-
-    }
-
-    public boolean checkDefaultBox(){
-
-       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-       checked = preferences.getBoolean(DEFAULT_CONNECTED, false);
-
-        if(checked){
-            beConnected.setChecked(true);
-        }else{
-            beConnected.setChecked(false);
-        }
-        return checked;
-    }
+            confirm = (Button)findViewById(R.id.confirmBtn);
+            goToRegister = (TextView)findViewById(R.id.registerLinkTxt);
+      }
 
 
+//    public boolean checkDefaultBox(){
+//
+//       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//       checked = preferences.getBoolean(DEFAULT_CONNECTED, false);
+//
+//        if(checked){
+//            beConnected.setChecked(true);
+//        }else{
+//            beConnected.setChecked(false);
+//        }
+//        return checked;
+//    }
 
     public void confirmOnClick(View v){
         //To insert text in EditText...
-        //String usernameInfo = username.getText().toString();
-        //String passwordInfo = password.getText().toString();
+        String usernameInfo = username.getText().toString();
+        String passwordInfo = password.getText().toString();
 
-        String usernameInfo = "paulo";
-        String passwordInfo = "0144";
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = preferences.getString(RegisterPageActivity.USER_NAME, "");
+        String password = preferences.getString(RegisterPageActivity.PASSWORD, "");
+
+        if(usernameInfo.equals("") || passwordInfo.equals("")){
+            String msg = getString(R.string.error_empty);
+            Toast.makeText(getApplicationContext(), msg,Toast.LENGTH_SHORT).show();
+
+        }else if(usernameInfo.equals(username) && passwordInfo.equals(password)){
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putBoolean(DEFAULT_CONNECTED, beConnected.isChecked());
+            Log.d("CheckBox Default","Value: " + beConnected.isChecked());
+            editor.commit();
+
+            Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+
+        }else {
+            String msg = getString(R.string.error_autentication);
+            Toast.makeText(getApplicationContext(), msg,Toast.LENGTH_SHORT).show();
+        }
 
         if(usernameInfo.equals("paulo") && passwordInfo.equals("0144")){
 
-            SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+            SharedPreferences pref = getPreferences(MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
 
             editor.putBoolean(DEFAULT_CONNECTED, beConnected.isChecked());

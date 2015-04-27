@@ -22,7 +22,7 @@
 
     <string name="cb_default">Default</string>
 
-    <string name="error_autentication">Username or Password is wrong! Please, try again..</string>
+
     <string name="spending">New Spending</string>
     <string name="new_trip">New Trip</string>
     <string name="my_trip">My Trips</string>
@@ -95,7 +95,10 @@
     <string name="title_activity_configurations">Configurations</string>
 
     <string name="close_alert">This application will close! Are you sure?</string>
-
+    <string name="error_empty">The fields can not be empty</string>
+    <string name="error_autentication">Username or Password is wrong! Please, try again..</string>
+    <string name="register_error">username or password is empty..</string>
+    <string name="register_ok">Register saved successfully!</string>
 
 
 

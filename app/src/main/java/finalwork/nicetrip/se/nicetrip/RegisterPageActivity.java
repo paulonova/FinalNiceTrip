@@ -24,8 +24,8 @@ import android.widget.Toast;
 
 public class RegisterPageActivity extends Activity implements View.OnClickListener {
 
-    private static final String USER_NAME = "username";
-    private static final String PASSWORD = "password";
+    public static final String USER_NAME = "username";
+    public static final String PASSWORD = "password";
 
     private EditText regUsername;
     private EditText regPassword;
@@ -61,25 +61,52 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
 
         switch (v.getId()){
             case R.id.saveBtn:
-
-//                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//                SharedPreferences.Editor editor = preferences.edit();
-//                editor.putString(USER_NAME,regUsername.toString());
-//                editor.putString(PASSWORD,regPassword.toString());
-//                editor.putString(EMAIL,regEmail.toString());
-//                editor.commit();
+                checkInputValues();
                 finish();
-                Toast.makeText(getApplicationContext(), "Register saved successfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Register saved successfully", Toast.LENGTH_SHORT).show();
                 break;
 
             case R.id.cancelBtn:
                 finish();
-                Toast.makeText(getApplicationContext(), "Register cancel successfully", Toast.LENGTH_LONG).show();
-//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent);
-
+                Toast.makeText(getApplicationContext(), "Register cancel successfully", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    public void showSharedInfo(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = preferences.getString(USER_NAME,"");
+        String password = preferences.getString(PASSWORD, "");
+
+        Toast.makeText(getApplicationContext(), R.string.register_error, Toast.LENGTH_SHORT).show();
+    }
+
+    public void checkInputValues(){
+
+        String username = regUsername.getText().toString();
+        String password = regPassword.getText().toString();
+
+        if(username.equals("") || password.equals("")){
+            Toast.makeText(getApplicationContext(), R.string.register_error, Toast.LENGTH_SHORT).show();
+
+        }else{
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(USER_NAME, regUsername.getText().toString());
+            editor.putString(PASSWORD, regPassword.getText().toString());
+            editor.apply();
+            Toast.makeText(getApplicationContext(), R.string.register_ok, Toast.LENGTH_SHORT).show();
+            finish();
+            showSharedInfo();
+        }
+
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
 
