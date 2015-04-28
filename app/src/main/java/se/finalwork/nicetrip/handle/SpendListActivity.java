@@ -1,16 +1,21 @@
 package se.finalwork.nicetrip.handle;
 
 import android.app.ListActivity;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,12 +25,18 @@ import java.util.Map;
 
 public class SpendListActivity extends ListActivity implements AdapterView.OnItemClickListener {
 
+    private DatabaseHelper helper;
+    private SimpleDateFormat dateFormat;
     private List<Map<String, Object>> spend;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.spend_list);
+
+        helper = new DatabaseHelper(this);
+        dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
         String[] from = {"date", "description", "value", "category"};
         int[] to = {R.id.spend_date, R.id.spend_description, R.id.spend_value, R.id.spend_category};
@@ -39,36 +50,62 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
         registerForContextMenu(getListView());
     }
 
+    /* db.execSQL("CREATE TABLE spending (_id INTEGER PRIMARY KEY," +
+                " category TEXT, date DATE, value DOUBLE," +
+                " description TEXT, place TEXT, trip_id INTEGER," +
+                " FOREIGN KEY(trip_id) REFERENCES trip(_id));");*/
+
+
+
     private List<Map<String, Object>>spendList(){
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql = "SELECT date, description, value, category, trip_id FROM spending";
+        //Cursor cursor = db.rawQuery("SELECT date, description, value, category FROM spending WHERE trip_id = ?", new String[]{id});
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
         spend = new ArrayList<Map<String, Object>>();
 
-        Map<String, Object> item = new HashMap<String, Object>();
-        item.put("date","05/03/2015");
-        item.put("description","Hotel");
-        item.put("value","Kr 350,00");
-        item.put("category",R.color.category_accommodation);
-        spend.add(item);
+        Log.d("SpendListActivity", "Passing here..");
 
-        item = new HashMap<String, Object>();
-        item.put("date","05/03/2015");
-        item.put("description","Car rent");
-        item.put("value","Kr 290,00");
-        item.put("category",R.color.category_transport);
-        spend.add(item);
+        for (int i = 0; i < cursor.getCount(); i++) {
 
-        item = new HashMap<String, Object>();
-        item.put("date","01/01/2015");
-        item.put("description","Kina food");
-        item.put("value","Kr 150,00");
-        item.put("category",R.color.category_feeding);
-        spend.add(item);
+            Log.d("SpendListActivity", "Passing here too..");
+            String date = cursor.getString(0);
+            String description = cursor.getString(1);
+            double value = cursor.getDouble(2);
+            String category = cursor.getString(3);
+            int tripId = cursor.getInt(4);
 
-        item = new HashMap<String, Object>();
-        item.put("date","01/01/2015");
-        item.put("description","IT Magazine");
-        item.put("value","Kr 90,00");
-        item.put("category",R.color.category_others);
-        spend.add(item);
+            Log.d("Database Info", "BudgetTable: " + date + " - " + description + " - " + value + " - " + category + " - " + tripId);
+
+            Map<String, Object> item = new HashMap<String, Object>();
+            item.put("date", date);
+            item.put("description", description);
+            item.put("value", getString(R.string.money) + " " + value);
+
+            if(category.equalsIgnoreCase("fuel")){
+                item.put("category", R.color.category_fuel);
+            }else if(category.equalsIgnoreCase("food")){
+                item.put("category", R.color.category_feeding);
+            }else if(category.equalsIgnoreCase("transportation")){
+                item.put("category", R.color.category_transport);
+            }else if(category.equalsIgnoreCase("accommodation")){
+                item.put("category", R.color.category_accommodation);
+            }else if(category.equalsIgnoreCase("others")){
+                item.put("category", R.color.category_others);
+            }
+
+            spend.add(item);
+            cursor.moveToNext();
+        }
+
+//        Map<String, Object> item = new HashMap<String, Object>();
+//        item.put("date","05/08/2010");
+//        item.put("description","Hotel");
+//        item.put("value","Kr 350,00");
+//        item.put("category",R.color.category_accommodation);
+//        spend.add(item);
 
         return spend;
     }

@@ -59,6 +59,31 @@ public class ConfigurationsActivity extends Activity {
                     return false;
                 }
             });
+
+            Preference showValueLimit = findPreference("value_limit");
+            showValueLimit.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+
+                    //LoginActivity.beConnected.setChecked(false);
+//                    SharedPreferences prefDefault = getSharedPreferences(LoginActivity.DEFAULT_CONNECTED, Context.MODE_PRIVATE);
+//                    SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
+
+                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor editor = pref.edit();
+                    editor.putBoolean(LoginActivity.DEFAULT_CONNECTED, false);
+                    editor.commit();
+
+                    Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+
+                    return false;
+                }
+            });
+
+
         }
 
 

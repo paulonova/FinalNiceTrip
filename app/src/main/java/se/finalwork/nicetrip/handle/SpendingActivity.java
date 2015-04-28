@@ -132,10 +132,6 @@ public class SpendingActivity extends Activity  { //implements View.OnClickListe
     }
 
 
-
-
-
-
 //    @Override
 //    public void onClick(View v) {
 //        setDate();

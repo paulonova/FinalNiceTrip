@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="title">#ffbb8c28</color>
-    <color name="category_feeding">#ffffdea2</color>
-    <color name="category_accommodation">#c2f0ab4f</color>
-    <color name="category_transport">#ded8bc28</color>
-    <color name="category_others">#ffffb435</color>
+    <color name="title">#8b691d</color>
+    <color name="category_feeding">#eae37d</color>
+    <color name="category_accommodation">#d7cf61</color>
+    <color name="category_transport">#b3ab3a</color>
+    <color name="category_others">#d5aa33</color>
+    <color name="category_fuel">#bb891a</color>
 
     <color name="black_color">#fe000000</color>
     <color name="orange_color">#ffffae00</color>

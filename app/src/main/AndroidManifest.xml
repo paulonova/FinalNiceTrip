@@ -57,7 +57,7 @@
             android:name="se.finalwork.nicetrip.handle.SpendListActivity"
             android:label="@string/title_activity_spend_list"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.Black" >
         </activity>
         <activity
             android:name="se.finalwork.nicetrip.handle.TripListActivity"

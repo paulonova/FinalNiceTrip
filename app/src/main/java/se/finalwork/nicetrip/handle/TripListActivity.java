@@ -51,9 +51,6 @@ import java.util.Map;
         String value = preferences.getString(LIMIT_VALUE, "-1");
         limitValue = Double.valueOf(value);
 
-
-
-
         String[] from = {"image", "destiny", "date", "total", "progressBar"};
         int[] to = {R.id.type_trip, R.id.destiny, R.id.date, R.id.total, R.id.progressBar};
 
@@ -108,15 +105,15 @@ import java.util.Map;
             item.put("total","Total Spend: "+ totalSpend);
             Log.d("TOTAL_SPEND", "TOTAL: " + totalSpend);
 
-            double alert = budget * limitValue/ 100;
+            double alert = budget * limitValue / 100;
             Double[] values = new Double[]{budget, alert, totalSpend};
             item.put("progressBar", values);
             trips.add(item);
             cursor.moveToNext();
 
-
         }
 
+        // Old testing codes..
 //        Map<String, Object> item = new HashMap<String, Object>();
 //        item.put("image",R.drawable.business);
 //        item.put("destiny","Stockholm");
@@ -124,30 +121,15 @@ import java.util.Map;
 //        item.put("total","Total Spend: Kr 314,00");
 //        item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
 //        trips.add(item);
-//
-//        item = new HashMap<String, Object>();
-//        item.put("image",R.drawable.vacations);
-//        item.put("destiny","Malmö");
-//        item.put("date","05/03/2015 to 05/04/2015");
-//        item.put("total","Total Spend: Kr 550,00");
-//        item.put("progressBar", new Double[]{650.0, 590.0, 550.0});
-//        trips.add(item);
-//
-//        item = new HashMap<String, Object>();
-//        item.put("image",R.drawable.business);
-//        item.put("destiny","Göteborg");
-//        item.put("date","05/03/2015 to 05/04/2015");
-//        item.put("total","Total Spend: Kr 600,00");
-//        item.put("progressBar", new Double[]{700.0, 650.0, 600.0});
-//        trips.add(item);
-
+        cursor.close();
         return trips;
     }
 
         private double calcTotalSpend(SQLiteDatabase db, String id) {
-            Cursor cursor = db.rawQuery("SELECT SUM(VALUE) FROM SPENDING WHERE TRIP_ID = ?", new String[]{ id });
+            Cursor cursor = db.rawQuery("SELECT SUM(value) FROM SPENDING WHERE TRIP_ID = ?", new String[]{ id });
             cursor.moveToFirst();
             double total = cursor.getDouble(0);
+            Log.d("SUM(value)","VALUE: " + cursor.getDouble(0));
             cursor.close();
             return total;
         }
@@ -210,19 +192,21 @@ import java.util.Map;
 
     @Override
     public void onClick(DialogInterface dialog, int item) {
-
+        Log.d("Options Dialog","I am Here in OPTIONS ");
         switch (item){
 
-            case 0:
+            case 0: // Edit
                 startActivity(new Intent(this, NewTripActivity.class));
                 break;
-            case 1:
+            case 1: //New Spend
                 startActivity(new Intent(this, SpendingActivity.class));
                 break;
-            case 2:
+            case 2: //Expenses Made
+                getSelectedItemId();
+                Log.d("getListView()","ID: "+ getSelectedItemId());
                 startActivity(new Intent(this, SpendListActivity.class));
                 break;
-            case 3:
+            case 3: //Remove
                 dialogConfirmation.show();
                 break;
 
@@ -238,11 +222,5 @@ import java.util.Map;
     }
 
 
-
-    /*
-    Problemas com a ProgressBar...
-    Alguma coisa esta errada e precisa ser refeita...
-    parou pg. 107
-     */
 
 }
