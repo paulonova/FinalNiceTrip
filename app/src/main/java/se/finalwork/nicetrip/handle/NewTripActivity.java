@@ -133,6 +133,10 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
 
     }
 
+    public void SetActualTrip(){
+
+    }
+
 
 
     public void saveTrip(View view){

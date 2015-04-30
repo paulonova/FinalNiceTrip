@@ -38,7 +38,7 @@ public class LoginActivity extends Activity {
         password = (EditText)findViewById(R.id.password);
         beConnected = (CheckBox)findViewById(R.id.cbDefault);
 
-       SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean checked = preferences.getBoolean(DEFAULT_CONNECTED, false);
         Log.d("DEFAULT_CONNECTED", "Value: " + checked);
 

@@ -82,7 +82,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="preference">Settings</string>
+    <string name="preference">Trip Settings..</string>
+    <string name="login_set">Set Login..</string>
+
     <string name="mode_trip_summary">Direct spending to the actual trip..</string>
     <string name="trip_mode">Trip Mode</string>
     <string name="default_mode_summary">Set back the Login Page..</string>

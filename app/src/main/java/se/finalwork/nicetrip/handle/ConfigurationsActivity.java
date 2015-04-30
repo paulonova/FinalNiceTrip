@@ -2,13 +2,14 @@ package se.finalwork.nicetrip.handle;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.os.Bundle;
-
+import android.widget.Toast;
 
 
 public class ConfigurationsActivity extends Activity {
@@ -22,6 +23,21 @@ public class ConfigurationsActivity extends Activity {
 
 
 
+    }
+
+    // Method to read preferences(String)
+    public static String Read(Context context, final String key) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getString(key, "");
+    }
+
+
+    // Methods to write preferences(String)
+    public static void Write(Context context, final String key, final String value) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(key, value);
+        editor.commit();
     }
 
 
@@ -43,10 +59,6 @@ public class ConfigurationsActivity extends Activity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
 
-                    //LoginActivity.beConnected.setChecked(false);
-//                    SharedPreferences prefDefault = getSharedPreferences(LoginActivity.DEFAULT_CONNECTED, Context.MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
-
                     SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putBoolean(LoginActivity.DEFAULT_CONNECTED, false);
@@ -60,28 +72,26 @@ public class ConfigurationsActivity extends Activity {
                 }
             });
 
-            Preference showValueLimit = findPreference("value_limit");
-            showValueLimit.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//            Preference showValueLimit = findPreference("value_limit");
+//            showValueLimit.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+//
+//                @Override
+//                public boolean onPreferenceClick(Preference preference) {
+//
+////                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+////                    String valueLimit = prefs.getString("value_limit", null);
+////
+////
+////
+////                    Toast.makeText(getApplicationContext(), "ValueLimit: " + valueLimit, Toast.LENGTH_LONG).show();
+//
+//
+//                    return false;
+//                }
+//            });
 
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
 
-                    //LoginActivity.beConnected.setChecked(false);
-//                    SharedPreferences prefDefault = getSharedPreferences(LoginActivity.DEFAULT_CONNECTED, Context.MODE_PRIVATE);
-//                    SharedPreferences.Editor editor = getPreferences(MODE_PRIVATE).edit();
 
-                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    SharedPreferences.Editor editor = pref.edit();
-                    editor.putBoolean(LoginActivity.DEFAULT_CONNECTED, false);
-                    editor.commit();
-
-                    Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-
-                    return false;
-                }
-            });
 
 
         }

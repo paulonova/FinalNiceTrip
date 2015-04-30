@@ -16,12 +16,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL("CREATE TABLE trip (_id INTEGER PRIMARY KEY," +
+        db.execSQL("CREATE TABLE trip (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "destiny TEXT, type_trip INTEGER, arrive_date DATE," +
                 "exit_date DATE, budget DOUBLE," +
                 "number_peoples INTEGER);");
 
-        db.execSQL("CREATE TABLE spending (_id INTEGER PRIMARY KEY," +
+        db.execSQL("CREATE TABLE spending (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 " category TEXT, date DATE, value DOUBLE," +
                 " description TEXT, place TEXT, trip_id INTEGER," +
                 " FOREIGN KEY(trip_id) REFERENCES trip(_id));");

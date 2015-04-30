@@ -87,7 +87,9 @@ import java.util.Map;
             String arrivalDate = cursor.getString(3);
             String exitDate = cursor.getString(4);
             double budget = cursor.getDouble(5);
-            Log.d("Database Info", "Info: " + id + " - " + typeTrip + " - " + destiny + " - " + arrivalDate + " - " + exitDate + " - " + budget);
+            Log.d("Database Info TRIP", "Info: " + "ID: " + id + " - " + "TypeTrip: " + typeTrip + " - " +
+                                        "Destiny: " + destiny + " - " + "ArrivalDate: " +  arrivalDate + " - " +
+                                        "ExitDate: " + exitDate + " - " + "Budget: " +  budget);
 
             Map<String, Object> item = new HashMap<String, Object>();
 
