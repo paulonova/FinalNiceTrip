@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 
-
 public class RegisterPageActivity extends Activity implements View.OnClickListener {
 
     public static final String USER_NAME = "username";
@@ -34,14 +33,13 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
         setContentView(R.layout.new_register_layout);
 
 
-
         regUsername = (EditText) findViewById(R.id.username);
         regPassword = (EditText) findViewById(R.id.password);
 
-        saveButton = (Button)findViewById(R.id.saveBtn);
+        saveButton = (Button) findViewById(R.id.saveBtn);
         saveButton.setOnClickListener(this);
 
-        cancelButton = (Button)findViewById(R.id.cancelBtn);
+        cancelButton = (Button) findViewById(R.id.cancelBtn);
         cancelButton.setOnClickListener(this);
     }
 
@@ -49,7 +47,7 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.saveBtn:
                 checkInputValues();
                 break;
@@ -61,23 +59,23 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
     }
 
 
-    public void showSharedInfo(){
+    public void showSharedInfo() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String username = preferences.getString(USER_NAME,"");
+        String username = preferences.getString(USER_NAME, "");
         String password = preferences.getString(PASSWORD, "");
 
         Toast.makeText(getApplicationContext(), R.string.register_error, Toast.LENGTH_SHORT).show();
     }
 
-    public void checkInputValues(){
+    public void checkInputValues() {
 
         String username = regUsername.getText().toString();
         String password = regPassword.getText().toString();
 
-        if(username.equals("") || password.equals("")){
+        if (username.equals("") || password.equals("")) {
             Toast.makeText(getApplicationContext(), R.string.register_error, Toast.LENGTH_SHORT).show();
 
-        }else{
+        } else {
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putString(USER_NAME, regUsername.getText().toString());
@@ -87,7 +85,6 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
             finish();
             showSharedInfo();
         }
-
 
 
     }

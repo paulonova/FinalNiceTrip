@@ -5,14 +5,27 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.os.Bundle;
-import android.widget.Toast;
 
 
 public class ConfigurationsActivity extends Activity {
+
+    // Method to read preferences(String)
+    public static String Read(Context context, final String key) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        return pref.getString(key, "");
+    }
+
+    // Methods to write preferences(String)
+    public static void Write(Context context, final String key, final String value) {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,32 +36,14 @@ public class ConfigurationsActivity extends Activity {
 
     }
 
-    // Method to read preferences(String)
-    public static String Read(Context context, final String key) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getString(key, "");
-    }
-
-
-    // Methods to write preferences(String)
-    public static void Write(Context context, final String key, final String value) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(key, value);
-        editor.commit();
-    }
-
-
-
     @SuppressLint("ValidFragment")
-    public class SettingFragment extends PreferenceFragment{
+    public class SettingFragment extends PreferenceFragment {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preference);
-
 
 
             Preference showDefaultLogin = findPreference("default_mode");
@@ -62,7 +57,7 @@ public class ConfigurationsActivity extends Activity {
                     editor.putBoolean(LoginActivity.DEFAULT_CONNECTED, false);
                     editor.commit();
 
-                    Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                     startActivity(intent);
                     finish();
 
@@ -92,9 +87,6 @@ public class ConfigurationsActivity extends Activity {
                     return false;
                 }
             });
-
-
-
 
 
         }

@@ -1,17 +1,6 @@
 package se.finalwork.nicetrip.domain;
 
-import java.util.Date;
-
-
 public class Trip {
-
-    private Integer id;
-    private String destiny;
-    private Integer typeTrip;
-    private String arrivalDate;
-    private String exitDate;
-    private Double budget;
-    private Integer numberPeoples;
 
     public static final String TABLE = "trip";
     public static final String _ID = "_id";
@@ -21,9 +10,15 @@ public class Trip {
     public static final String BUDGET = "budget";
     public static final String NUMBER_PEOPLES = "number_peoples";
     public static final String TYPE_TRIP = "type_trip";
-
     public static final String[] COLUMNS = new String[]{
-            _ID, DESTINY, ARRIVAL_DATE, EXIT_DATE, TYPE_TRIP, BUDGET, NUMBER_PEOPLES };
+            _ID, DESTINY, ARRIVAL_DATE, EXIT_DATE, TYPE_TRIP, BUDGET, NUMBER_PEOPLES};
+    private Integer id;
+    private String destiny;
+    private Integer typeTrip;
+    private String arrivalDate;
+    private String exitDate;
+    private Double budget;
+    private Integer numberPeoples;
 
     // Constructor
     public Trip() {

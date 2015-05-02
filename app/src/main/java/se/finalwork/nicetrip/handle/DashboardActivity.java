@@ -13,8 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import se.finalwork.nicetrip.handle.R;
-
 
 public class DashboardActivity extends Activity {
 
@@ -29,31 +27,23 @@ public class DashboardActivity extends Activity {
         String valueLimit = pref.getString("value_limit", null);
         Log.d("valueLimit", "LimitValue Check: " + valueLimit);
 
-        if(valueLimit == null){
+        if (valueLimit == null) {
             SharedPreferences pref2 = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
             SharedPreferences.Editor editor = pref2.edit();
             editor.putString("value_limit", "80").toString();
             editor.apply();
             Log.d("valueLimit", "Creating a LimitValue... ");
-        }else{
+        } else {
             //Do nothing
-            Log.d("valueLimit", "LimitValue: " +valueLimit);
+            Log.d("valueLimit", "LimitValue: " + valueLimit);
         }
-
-
-
-
-
-
-
 
     }
 
 
+    public void selectOption(View v) {
 
-    public void selectOption(View v){
-
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.new_trips:
                 startActivity(new Intent(getApplicationContext(), NewTripActivity.class));
                 break;
@@ -109,7 +99,7 @@ public class DashboardActivity extends Activity {
     /**
      * Method to use when onBackPressed() is used.
      */
-    public void alertBeforeClose(){
+    public void alertBeforeClose() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Alert");

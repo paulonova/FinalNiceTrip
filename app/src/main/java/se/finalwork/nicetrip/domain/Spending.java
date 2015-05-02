@@ -5,14 +5,6 @@ import java.util.Date;
 
 public class Spending {
 
-    private Long id;
-    private Date date;
-    private String category;
-    private String description;
-    private Double value;
-    private String place;
-    private Integer tripId;
-
     public static final String TABLE = "spending";
     public static final String _ID = "_id";
     public static final String TRIP_ID = "trip_id";
@@ -21,9 +13,15 @@ public class Spending {
     public static final String DESCRIPTION = "description";
     public static final String VALUE = "value";
     public static final String PLACE = "place";
-
     public static final String[] COLUMNS = new String[]{
-            _ID, TRIP_ID, CATEGORY, DATE, DESCRIPTION, VALUE, PLACE };
+            _ID, TRIP_ID, CATEGORY, DATE, DESCRIPTION, VALUE, PLACE};
+    private Long id;
+    private Date date;
+    private String category;
+    private String description;
+    private Double value;
+    private String place;
+    private Integer tripId;
 
     // Constructor
     public Spending() {

@@ -9,7 +9,6 @@ import android.view.ContextMenu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -22,13 +21,17 @@ import java.util.List;
 import java.util.Map;
 
 
-
 public class SpendListActivity extends ListActivity implements AdapterView.OnItemClickListener {
 
     private DatabaseHelper helper;
     private SimpleDateFormat dateFormat;
     private List<Map<String, Object>> spend;
+    private String dateBefore = "";
 
+    /* db.execSQL("CREATE TABLE spending (_id INTEGER PRIMARY KEY," +
+                " category TEXT, date DATE, value DOUBLE," +
+                " description TEXT, place TEXT, trip_id INTEGER," +
+                " FOREIGN KEY(trip_id) REFERENCES trip(_id));");*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +53,7 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
         registerForContextMenu(getListView());
     }
 
-    /* db.execSQL("CREATE TABLE spending (_id INTEGER PRIMARY KEY," +
-                " category TEXT, date DATE, value DOUBLE," +
-                " description TEXT, place TEXT, trip_id INTEGER," +
-                " FOREIGN KEY(trip_id) REFERENCES trip(_id));");*/
-
-
-
-    private List<Map<String, Object>>spendList(){
+    private List<Map<String, Object>> spendList() {
 
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "SELECT date, description, value, category, trip_id FROM spending";
@@ -84,15 +80,15 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
             item.put("description", description);
             item.put("value", getString(R.string.money) + " " + value);
 
-            if(category.equalsIgnoreCase("fuel")){
+            if (category.equalsIgnoreCase("fuel")) {
                 item.put("category", R.color.category_fuel);
-            }else if(category.equalsIgnoreCase("food")){
+            } else if (category.equalsIgnoreCase("food")) {
                 item.put("category", R.color.category_feeding);
-            }else if(category.equalsIgnoreCase("transportation")){
+            } else if (category.equalsIgnoreCase("transportation")) {
                 item.put("category", R.color.category_transport);
-            }else if(category.equalsIgnoreCase("accommodation")){
+            } else if (category.equalsIgnoreCase("accommodation")) {
                 item.put("category", R.color.category_accommodation);
-            }else if(category.equalsIgnoreCase("others")){
+            } else if (category.equalsIgnoreCase("others")) {
                 item.put("category", R.color.category_others);
             }
 
@@ -110,16 +106,14 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
         return spend;
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-       Map<String, Object> map= spend.get(position);
-        String description = (String)map.get("description");
+        Map<String, Object> map = spend.get(position);
+        String description = (String) map.get("description");
         String message = "Selected expense: " + description;
-        Toast.makeText(this,message, Toast.LENGTH_SHORT ).show();
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -130,8 +124,8 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item){
-        if(item.getItemId() == R.id.remove_spending){
+    public boolean onContextItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.remove_spending) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             spend.remove(info.position);
             getListView().invalidateViews();
@@ -145,25 +139,23 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
         return super.onContextItemSelected(item);
     }
 
-    private String dateBefore = "";
-
-    private class SpendViewBinder implements SimpleAdapter.ViewBinder{
+    private class SpendViewBinder implements SimpleAdapter.ViewBinder {
 
         @Override
         public boolean setViewValue(View view, Object data, String textRepresentation) {
 
-            if(view.getId() == R.id.spend_date){
-                if(!dateBefore.equals(data)){
+            if (view.getId() == R.id.spend_date) {
+                if (!dateBefore.equals(data)) {
                     TextView textView = (TextView) view;
                     textView.setText(textRepresentation);
                     dateBefore = textRepresentation;
                     view.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     view.setVisibility(View.GONE);
                 }
                 return true;
             }
-            if(view.getId() == R.id.spend_category){
+            if (view.getId() == R.id.spend_category) {
                 Integer id = (Integer) data;
                 view.setBackgroundColor(getResources().getColor(id));
                 return true;

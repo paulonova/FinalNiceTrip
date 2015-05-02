@@ -4,7 +4,7 @@
     <item
         android:id="@+id/remove_from_spend_list"
         android:icon="@drawable/trash_basket"
-        android:title="@string/remove_spending"/>
+        android:title="@string/remove_spending" />
 
 
 </menu>

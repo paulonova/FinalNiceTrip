@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/title"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/spend_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="italic"
         android:layout_gravity="right"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:textStyle="italic" />
 
     <LinearLayout
         android:id="@+id/spend_category"
@@ -25,20 +25,20 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
+            android:textColor="@android:color/black"
             android:textSize="17dp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textStyle="bold" />
+
         <TextView
             android:id="@+id/spend_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="15dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/black"
+            android:textSize="15dp" />
 
-        </LinearLayout>
-
+    </LinearLayout>
 
 
 </LinearLayout>

@@ -4,16 +4,16 @@
 
     <PreferenceCategory android:title="@string/preference">
         <CheckBoxPreference
-            android:key="mode_trip"
-            android:enabled="true"
             android:defaultValue="true"
+            android:enabled="true"
+            android:key="mode_trip"
             android:summary="@string/mode_trip_summary"
-            android:title="@string/trip_mode"/>
+            android:title="@string/trip_mode" />
 
         <se.finalwork.nicetrip.views.EditLimitValuePreference
+            android:defaultValue="80"
             android:dialogTitle="@string/set_value_limit"
             android:key="value_limit"
-            android:defaultValue="80"
             android:summary="@string/value_limit_summary"
             android:title="@string/value_limit">
 
@@ -25,7 +25,7 @@
         <PreferenceScreen
             android:key="default_mode"
             android:summary="@string/default_mode_summary"
-            android:title="@string/set_login_page"/>
+            android:title="@string/set_login_page" />
     </PreferenceCategory>
 
 </PreferenceScreen>

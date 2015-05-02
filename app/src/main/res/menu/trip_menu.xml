@@ -3,12 +3,12 @@
     <item
         android:id="@+id/new_spend"
         android:icon="@drawable/new_spend_icon"
-        android:title="@string/new_spend"/>
+        android:title="@string/new_spend" />
 
     <item
         android:id="@+id/remove_trip"
         android:icon="@drawable/trash_basket"
-        android:title="@string/remove_trip"/>
+        android:title="@string/remove_trip" />
 
 
 </menu>

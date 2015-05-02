@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -25,20 +24,19 @@ import java.util.Map;
 
 
 public class TripListActivity extends ListActivity
-                                  implements AdapterView.OnItemClickListener, DialogInterface.OnClickListener, SimpleAdapter.ViewBinder {
+        implements AdapterView.OnItemClickListener, DialogInterface.OnClickListener, SimpleAdapter.ViewBinder {
 
 
-        private AlertDialog dialogConfirmation;
-        private AlertDialog alertDialog;
-        private int selectedTrip;
-
-        public static final String LIMIT_VALUE = "limit_value";
-        private DatabaseHelper helper;
-        private SimpleDateFormat dateFormat;
-        Date date;
-        private Double limitValue;
-        private AlertDialog alert;
-
+    public static final String LIMIT_VALUE = "limit_value";
+    Date date;
+    private AlertDialog dialogConfirmation;
+    private AlertDialog alertDialog;
+    private int selectedTrip;
+    private DatabaseHelper helper;
+    private SimpleDateFormat dateFormat;
+    private Double limitValue;
+    private AlertDialog alert;
+    private List<Map<String, Object>> trips;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,12 +72,7 @@ public class TripListActivity extends ListActivity
         this.dialogConfirmation = buildDialogConfirmation();
     }
 
-
-
-
-    private List<Map<String, Object>> trips;
-
-    private List <Map<String, Object>> listTrips(){
+    private List<Map<String, Object>> listTrips() {
 
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "SELECT _id, type_trip, destiny, arrive_date, exit_date, budget FROM trip";
@@ -87,13 +80,12 @@ public class TripListActivity extends ListActivity
         cursor.moveToFirst();
         trips = new ArrayList<Map<String, Object>>();
 
-        for (int i = 0; i <cursor.getCount() ; i++) {
-
+        for (int i = 0; i < cursor.getCount(); i++) {
 
 
             // Getting values from DB..
             String id = cursor.getString(0);
-            int  typeTrip = cursor.getInt(1);
+            int typeTrip = cursor.getInt(1);
             String destiny = cursor.getString(2);
             String arrivalDate = cursor.getString(3);
             String exitDate = cursor.getString(4);
@@ -101,29 +93,29 @@ public class TripListActivity extends ListActivity
 
 
             Log.d("Database Info TRIP", "Info: " + "ID: " + id + " - " + "TypeTrip: " + typeTrip + " - " +
-                                        "Destiny: " + destiny + " - " + "ArrivalDate: " +  arrivalDate + " - " +
-                                        "ExitDate: " + exitDate + " - " + "Budget: " +  budget);
+                    "Destiny: " + destiny + " - " + "ArrivalDate: " + arrivalDate + " - " +
+                    "ExitDate: " + exitDate + " - " + "Budget: " + budget);
 
             Map<String, Object> item = new HashMap<String, Object>();
 
-            if(typeTrip == Constants.TRIP_VACATIONS){
+            if (typeTrip == Constants.TRIP_VACATIONS) {
                 item.put("image", R.drawable.vacations);
-            }else{
-                item.put("image",R.drawable.business);
+            } else {
+                item.put("image", R.drawable.business);
             }
 
             item.put("id", id);
-            item.put("destiny",destiny);
+            item.put("destiny", destiny);
             item.put("date", arrivalDate + " to " + exitDate);
 
             double totalSpend = calcTotalSpend(db, id);
-            item.put("total","Total Spend: "+ totalSpend);
+            item.put("total", "Total Spend: " + totalSpend);
             Log.d("TOTAL_SPEND", "TOTAL: " + totalSpend);
 
 
             double alert = budget * limitValue / 100;
             Double[] values = new Double[]{budget, alert, 1600d};  // Value not REAL !
-            Log.d("ProgressBar", "values: " + "Budget: "+ budget + " Alert: " + alert + " Total: " + totalSpend);
+            Log.d("ProgressBar", "values: " + "Budget: " + budget + " Alert: " + alert + " Total: " + totalSpend);
             item.put("progressBar", values);
             trips.add(item);
             cursor.moveToNext();
@@ -132,10 +124,10 @@ public class TripListActivity extends ListActivity
 
         // Old testing codes..
         Map<String, Object> item = new HashMap<String, Object>();
-        item.put("image",R.drawable.business);
-        item.put("destiny","Stockholm");
-        item.put("date","02/02/2015 to 05/02/2015");
-        item.put("total","Total Spend: Kr 314,00");
+        item.put("image", R.drawable.business);
+        item.put("destiny", "Stockholm");
+        item.put("date", "02/02/2015 to 05/02/2015");
+        item.put("total", "Total Spend: Kr 314,00");
         item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
         trips.add(item);
 
@@ -144,40 +136,40 @@ public class TripListActivity extends ListActivity
     }
 
 
-        private double calcTotalSpend(SQLiteDatabase db, String id) {
-            Cursor cursor = db.rawQuery("SELECT SUM(value) FROM SPENDING WHERE TRIP_ID = ?", new String[]{ id });
-            cursor.moveToFirst();
-            double total = cursor.getDouble(0);
-            Log.d("SUM(value)","VALUE: " + cursor.getDouble(0));
-            cursor.close();
-            return total;
-        }
+    private double calcTotalSpend(SQLiteDatabase db, String id) {
+        Cursor cursor = db.rawQuery("SELECT SUM(value) FROM SPENDING WHERE TRIP_ID = ?", new String[]{id});
+        cursor.moveToFirst();
+        double total = cursor.getDouble(0);
+        Log.d("SUM(value)", "VALUE: " + cursor.getDouble(0));
+        cursor.close();
+        return total;
+    }
 
-        public void alertOmLimitValue(){
+    public void alertOmLimitValue() {
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Alert");
-            builder.setMessage(R.string.limit_alert);
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Alert");
+        builder.setMessage(R.string.limit_alert);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
 
-                }
-            });
-            alert = builder.create();
-            alert.show();
+            }
+        });
+        alert = builder.create();
+        alert.show();
 
-        }
+    }
 
 
     @Override
     public boolean setViewValue(View view, Object data, String textRepresentation) {
 
-        if(view.getId() == R.id.progressBar){
+        if (view.getId() == R.id.progressBar) {
             Double values[] = (Double[]) data;
-            ProgressBar progressBar = (ProgressBar)view;
+            ProgressBar progressBar = (ProgressBar) view;
             progressBar.setMax(values[0].intValue());
             progressBar.setSecondaryProgress(values[1].intValue());
             progressBar.setProgress(values[2].intValue());
@@ -186,7 +178,6 @@ public class TripListActivity extends ListActivity
 
         return false;
     }
-
 
 
     @Override
@@ -203,7 +194,7 @@ public class TripListActivity extends ListActivity
 
     }
 
-    private AlertDialog buildAlertDialog(){
+    private AlertDialog buildAlertDialog() {
         final CharSequence[] items = {
                 getString(R.string.edit),
                 getString(R.string.new_spend_dialog),
@@ -217,7 +208,7 @@ public class TripListActivity extends ListActivity
     }
 
     // AlertDialog to confirm the remove..
-    private AlertDialog buildDialogConfirmation(){
+    private AlertDialog buildDialogConfirmation() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.trip_confirmation);
@@ -229,12 +220,12 @@ public class TripListActivity extends ListActivity
 
     @Override
     public void onClick(DialogInterface dialog, int item) {
-        Log.d("Options Dialog","I am Here in OPTIONS ");
+        Log.d("Options Dialog", "I am Here in OPTIONS ");
 
 //        if(limitValue>=budget){
 //
 //        }
-        switch (item){
+        switch (item) {
 
             case 0: // Edit
                 startActivity(new Intent(this, NewTripActivity.class));
@@ -244,7 +235,7 @@ public class TripListActivity extends ListActivity
                 break;
             case 2: //Expenses Made
                 getSelectedItemId();
-                Log.d("getListView()","ID: "+ getSelectedItemId());
+                Log.d("getListView()", "ID: " + getSelectedItemId());
                 startActivity(new Intent(this, SpendListActivity.class));
                 break;
             case 3: //Remove
@@ -261,7 +252,6 @@ public class TripListActivity extends ListActivity
                 break;
         }
     }
-
 
 
 }

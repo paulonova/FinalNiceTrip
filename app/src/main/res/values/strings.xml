@@ -52,7 +52,6 @@
     <string name="place">Place</string>
 
 
-
     <string-array name="category_spend">
         <item>Food</item>
         <item>Fuel</item>
@@ -62,7 +61,7 @@
     </string-array>
 
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_spend_list">Spendings from Trips</string>
     <string name="title_activity_trip_list">TripListActivity</string>
@@ -103,8 +102,6 @@
     <string name="register_error">username or password is empty..</string>
     <string name="register_ok">Register saved successfully!</string>
     <string name="money">$ </string>
-
-
 
 
 </resources>

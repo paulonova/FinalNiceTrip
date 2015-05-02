@@ -16,15 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-
-
 public class LoginActivity extends Activity {
 
     public static final String DEFAULT_CONNECTED = "be_connected";
+    public static CheckBox beConnected;
     private EditText username;
     private EditText password;
-    public static CheckBox beConnected;
-
     private Button confirm;
     private TextView goToRegister;
     private AlertDialog alert;
@@ -34,26 +31,26 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
-        username = (EditText)findViewById(R.id.username);
-        password = (EditText)findViewById(R.id.password);
-        beConnected = (CheckBox)findViewById(R.id.cbDefault);
+        username = (EditText) findViewById(R.id.username);
+        password = (EditText) findViewById(R.id.password);
+        beConnected = (CheckBox) findViewById(R.id.cbDefault);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean checked = preferences.getBoolean(DEFAULT_CONNECTED, false);
         Log.d("DEFAULT_CONNECTED", "Value: " + checked);
 
-        if(!checked){
+        if (!checked) {
             //Do nothing
-        }else{
+        } else {
             startActivity(new Intent(this, DashboardActivity.class));
             finish();
         }
-            confirm = (Button)findViewById(R.id.confirmBtn);
-            goToRegister = (TextView)findViewById(R.id.registerLinkTxt);
-      }
+        confirm = (Button) findViewById(R.id.confirmBtn);
+        goToRegister = (TextView) findViewById(R.id.registerLinkTxt);
+    }
 
     // Confirm Button and fields validation...
-    public void confirmOnClick(View v){
+    public void confirmOnClick(View v) {
         //To insert text in EditText...
         String usernameInfo = username.getText().toString();
         String passwordInfo = password.getText().toString();
@@ -62,15 +59,15 @@ public class LoginActivity extends Activity {
         String username = preferences.getString(RegisterPageActivity.USER_NAME, "");
         String password = preferences.getString(RegisterPageActivity.PASSWORD, "");
 
-        if(usernameInfo.equals("") && passwordInfo.equals("")){
+        if (usernameInfo.equals("") && passwordInfo.equals("")) {
             String msg = getString(R.string.error_empty);
-            Toast.makeText(getApplicationContext(), msg,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
 
-        }else if(usernameInfo.equals(username) && passwordInfo.equals(password)){
+        } else if (usernameInfo.equals(username) && passwordInfo.equals(password)) {
             SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
             SharedPreferences.Editor editor = pref.edit();
             editor.putBoolean(DEFAULT_CONNECTED, beConnected.isChecked());
-            Log.d("CheckBox Default","Value: " + beConnected.isChecked());
+            Log.d("CheckBox Default", "Value: " + beConnected.isChecked());
             editor.commit();
 
             Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
@@ -78,15 +75,15 @@ public class LoginActivity extends Activity {
             startActivity(intent);
             finish();
 
-        }else {
+        } else {
             String msg = getString(R.string.error_autentication);
-            Toast.makeText(getApplicationContext(), msg,Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         }
 
     }
 
     // Text link to Registration DialogBox..
-    public void goToRegistration(View v){
+    public void goToRegistration(View v) {
 
         Intent intent = new Intent(getApplicationContext(), RegisterPageActivity.class);
         startActivity(intent);
@@ -96,7 +93,7 @@ public class LoginActivity extends Activity {
     /**
      * Method to use when onBackPressed() is used.
      */
-    public void alertBeforeClose(){
+    public void alertBeforeClose() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Alert");

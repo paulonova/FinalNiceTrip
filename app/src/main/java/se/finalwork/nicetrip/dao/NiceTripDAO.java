@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,23 +25,23 @@ public class NiceTripDAO {
     }
 
     // Returns an instance of SQLiteDatabase, creating it if necessary..
-    private SQLiteDatabase getDb(){
-        if(db == null){
+    private SQLiteDatabase getDb() {
+        if (db == null) {
             db = helper.getWritableDatabase();
         }
         return db;
     }
 
-    public void close(){
+    public void close() {
         helper.close();
     }
 
 
-    public List<Trip> tripList(){
+    public List<Trip> tripList() {
         Cursor cursor = getDb().query(Trip.TABLE, Trip.COLUMNS, null, null, null, null, null);
 
         List<Trip> trips = new ArrayList<Trip>();
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             Trip trip = createTrip(cursor);
             trips.add(trip);
         }
@@ -50,10 +49,10 @@ public class NiceTripDAO {
         return trips;
     }
 
-    public Trip bringTripById(Integer id){
+    public Trip bringTripById(Integer id) {
         Cursor cursor = getDb().query(Trip.TABLE, Trip.COLUMNS, Trip._ID + " =?", new String[]{id.toString()}, null, null, null);
 
-        if(cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             Trip trip = createTrip(cursor);
             cursor.close();
             return trip;
@@ -62,7 +61,7 @@ public class NiceTripDAO {
     }
 
     /*Trip(Long id, String destiny, Integer typeTrip, Date arrivalDate, Date exitDate, Double budget, Integer numberPeoples)*/
-    private Trip createTrip(Cursor cursor){
+    private Trip createTrip(Cursor cursor) {
 
         // From the Constructor
         Trip trip = new Trip(
@@ -79,7 +78,7 @@ public class NiceTripDAO {
     }
 
 
-    public long Insert(Trip trip){
+    public long Insert(Trip trip) {
         ContentValues values = new ContentValues();
 
         values.put(Trip.DESTINY, trip.getDestiny());
@@ -98,15 +97,15 @@ public class NiceTripDAO {
 
 
     /* Methods to implement Spending functionality*/
-    public boolean removeSpending(Long id){
+    public boolean removeSpending(Long id) {
         String whereClause = Spending._ID + " = ?";
-        String[]whereArgs = new String[]{id.toString()};
+        String[] whereArgs = new String[]{id.toString()};
         int removed = getDb().delete(Spending.TABLE, whereClause, whereArgs);
         return removed > 0;
     }
 
 
-    public double calcTotalSpending(Trip trip){
+    public double calcTotalSpending(Trip trip) {
         Cursor cursor = getDb().rawQuery("SELECT SUM (" + Spending.VALUE + ") FROM " +
                 Spending.TABLE + " WHERE " +
                 Spending.TRIP_ID + " = ?", new String[]{trip.getId().toString()});
@@ -118,8 +117,7 @@ public class NiceTripDAO {
     }
 
 
-
-    private Spending createSpending(Cursor cursor){
+    private Spending createSpending(Cursor cursor) {
 
         // From the Constructor
         Spending spending = new Spending(
@@ -134,7 +132,6 @@ public class NiceTripDAO {
         return spending;
 
     }
-
 
 
 }

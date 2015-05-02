@@ -20,44 +20,63 @@ import android.widget.Toast;
 import java.util.Calendar;
 
 
+public class NewTripActivity extends Activity implements View.OnClickListener {
 
-public class NewTripActivity extends Activity implements View.OnClickListener  {
+    Calendar arrivalCalendar = Calendar.getInstance();
+    Calendar exitCalendar = Calendar.getInstance();
+    DatePickerDialog.OnDateSetListener dArrival = new DatePickerDialog.OnDateSetListener() {
 
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            arrivalCalendar.set(Calendar.YEAR, year);
+            arrivalCalendar.set(Calendar.MONTH, monthOfYear);
+            arrivalCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateArrivalDate();
+        }
+    };
+    DatePickerDialog.OnDateSetListener dExit = new DatePickerDialog.OnDateSetListener() {
+
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+            exitCalendar.set(Calendar.YEAR, year);
+            exitCalendar.set(Calendar.MONTH, monthOfYear);
+            exitCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateExitDate();
+
+        }
+    };
     private int year;
     private int month;
     private int day;
     private Button arrivalBtn;
     private Button exitBtn;
     private Button saveBtn;
-
     private RadioGroup typeTrip;
     private String typeTripText;
-    Calendar arrivalCalendar = Calendar.getInstance();
-    Calendar exitCalendar = Calendar.getInstance();
-
     private DatabaseHelper helper;
     private EditText destiny, budget, numberPeople;
     private RadioGroup radioGroup;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_trip);
 
-        arrivalBtn = (Button)findViewById(R.id.arrivalBtn);
+        arrivalBtn = (Button) findViewById(R.id.arrivalBtn);
         arrivalBtn.setOnClickListener(this);
-        exitBtn = (Button)findViewById(R.id.exitBtn);
+        exitBtn = (Button) findViewById(R.id.exitBtn);
         exitBtn.setOnClickListener(this);
         updateArrivalDate();
         updateExitDate();
 
         destiny = (EditText) findViewById(R.id.destination);
-        radioGroup = (RadioGroup)findViewById(R.id.typeTrip);
-        budget = (EditText)findViewById(R.id.budget);
-        numberPeople = (EditText)findViewById(R.id.number_people);
+        radioGroup = (RadioGroup) findViewById(R.id.typeTrip);
+        budget = (EditText) findViewById(R.id.budget);
+        numberPeople = (EditText) findViewById(R.id.number_people);
 
-        saveBtn = (Button)findViewById(R.id.save_trip);
+        saveBtn = (Button) findViewById(R.id.save_trip);
 
 
         // Prepare access to database..
@@ -69,7 +88,7 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
     @Override
     public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.arrivalBtn:
                 setArriveDate();
                 break;
@@ -80,42 +99,17 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
         }
     }
 
-    DatePickerDialog.OnDateSetListener dArrival = new DatePickerDialog.OnDateSetListener() {
+    public void setArriveDate() {
 
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-            arrivalCalendar.set(Calendar.YEAR,year);
-            arrivalCalendar.set(Calendar.MONTH,monthOfYear);
-            arrivalCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-            updateArrivalDate();
-        }
-    };
-
-    DatePickerDialog.OnDateSetListener dExit = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
-            exitCalendar.set(Calendar.YEAR,year);
-            exitCalendar.set(Calendar.MONTH,monthOfYear);
-            exitCalendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
-            updateExitDate();
-
-        }
-    };
-
-    public void setArriveDate(){
-
-        new DatePickerDialog(NewTripActivity.this, dArrival,arrivalCalendar.get(Calendar.YEAR),arrivalCalendar.get(Calendar.MONTH),arrivalCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(NewTripActivity.this, dArrival, arrivalCalendar.get(Calendar.YEAR), arrivalCalendar.get(Calendar.MONTH), arrivalCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    public void setExitDate(){
+    public void setExitDate() {
 
-        new DatePickerDialog(NewTripActivity.this, dExit,exitCalendar.get(Calendar.YEAR),exitCalendar.get(Calendar.MONTH),exitCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(NewTripActivity.this, dExit, exitCalendar.get(Calendar.YEAR), exitCalendar.get(Calendar.MONTH), exitCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
-    public void updateArrivalDate(){
+    public void updateArrivalDate() {
 
         int year = arrivalCalendar.get(Calendar.YEAR);
         int month = arrivalCalendar.get(Calendar.MONTH);
@@ -124,7 +118,7 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
         arrivalBtn.setText(year + "/" + (month + 1) + "/" + day);
     }
 
-    public void updateExitDate(){
+    public void updateExitDate() {
         int year = exitCalendar.get(Calendar.YEAR);
         int month = exitCalendar.get(Calendar.MONTH);
         int day = exitCalendar.get(Calendar.DAY_OF_MONTH);
@@ -133,13 +127,12 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
 
     }
 
-    public void SetActualTrip(){
+    public void SetActualTrip() {
 
     }
 
 
-
-    public void saveTrip(View view){
+    public void saveTrip(View view) {
         SQLiteDatabase db = helper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -151,31 +144,30 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
         values.put("number_peoples", numberPeople.getText().toString());
 
         int type = radioGroup.getCheckedRadioButtonId();
-        if(type == R.id.vacationBtn){
+        if (type == R.id.vacationBtn) {
             values.put("type_trip", Constants.TRIP_VACATIONS);
             setTypeTripText(getString(R.string.vacation));
-        }else{
+        } else {
             values.put("type_trip", Constants.TRIP_BUSINESS);
             setTypeTripText(getString(R.string.business));
         }
 
         // Show all information to save in DB..
         Log.d("Saved Informations", "Info: " + destiny.getText().toString() + " - " + getTypeTripText() + " - " +
-                                               arrivalBtn.getText().toString()+ " - " + exitBtn.getText().toString() + " - " +
-                                               budget.getText().toString() + " - " + numberPeople.getText().toString());
+                arrivalBtn.getText().toString() + " - " + exitBtn.getText().toString() + " - " +
+                budget.getText().toString() + " - " + numberPeople.getText().toString());
 
         long result = db.insert("trip", null, values);
 
-        if(result != -1){
+        if (result != -1) {
             Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
             finish();
-        }else {
+        } else {
             Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
         }
 
 
     }
-
 
 
     // Method to show the menu with exit button..
@@ -191,9 +183,9 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.new_spend:
-                startActivity(new Intent(this,SpendingActivity.class));
+                startActivity(new Intent(this, SpendingActivity.class));
                 return true;
             case R.id.remove_trip:
                 // remove from DataBase
