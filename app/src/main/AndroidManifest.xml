@@ -37,7 +37,7 @@
 
         <activity
             android:name="se.finalwork.nicetrip.handle.DashboardActivity"
-            android:label="@string/title_activity_first_page"
+            android:label="@string/litle"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
