@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,9 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 
-
-
-    public class TripListActivity extends ListActivity
+public class TripListActivity extends ListActivity
                                   implements AdapterView.OnItemClickListener, DialogInterface.OnClickListener, SimpleAdapter.ViewBinder {
 
 
@@ -36,20 +35,32 @@ import java.util.Map;
         public static final String LIMIT_VALUE = "limit_value";
         private DatabaseHelper helper;
         private SimpleDateFormat dateFormat;
+        Date date;
         private Double limitValue;
+        private AlertDialog alert;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Getting the Limit Value from SharedPreferences..
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = pref.edit();
+
+        SharedPreferences pref2 = getSharedPreferences("value_limit", 1);
+        String valueLimit = pref2.getString("value_limit", null);
+        Log.d("LIMIT VALUE:", "Value: " + valueLimit);
+
         helper = new DatabaseHelper(this);
         dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
+
         // Instantiate database and retrieve the limit value of the budget..
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String value = preferences.getString(LIMIT_VALUE, "-1");
-        limitValue = Double.valueOf(value);
+//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        String value = preferences.getString(LIMIT_VALUE, "-1");
+
+        limitValue = Double.valueOf(valueLimit);
 
         String[] from = {"image", "destiny", "date", "total", "progressBar"};
         int[] to = {R.id.type_trip, R.id.destiny, R.id.date, R.id.total, R.id.progressBar};
@@ -87,6 +98,8 @@ import java.util.Map;
             String arrivalDate = cursor.getString(3);
             String exitDate = cursor.getString(4);
             double budget = cursor.getDouble(5);
+
+
             Log.d("Database Info TRIP", "Info: " + "ID: " + id + " - " + "TypeTrip: " + typeTrip + " - " +
                                         "Destiny: " + destiny + " - " + "ArrivalDate: " +  arrivalDate + " - " +
                                         "ExitDate: " + exitDate + " - " + "Budget: " +  budget);
@@ -107,8 +120,10 @@ import java.util.Map;
             item.put("total","Total Spend: "+ totalSpend);
             Log.d("TOTAL_SPEND", "TOTAL: " + totalSpend);
 
+
             double alert = budget * limitValue / 100;
-            Double[] values = new Double[]{budget, alert, totalSpend};
+            Double[] values = new Double[]{budget, alert, 1600d};  // Value not REAL !
+            Log.d("ProgressBar", "values: " + "Budget: "+ budget + " Alert: " + alert + " Total: " + totalSpend);
             item.put("progressBar", values);
             trips.add(item);
             cursor.moveToNext();
@@ -116,16 +131,18 @@ import java.util.Map;
         }
 
         // Old testing codes..
-//        Map<String, Object> item = new HashMap<String, Object>();
-//        item.put("image",R.drawable.business);
-//        item.put("destiny","Stockholm");
-//        item.put("date","02/02/2015 to 05/02/2015");
-//        item.put("total","Total Spend: Kr 314,00");
-//        item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
-//        trips.add(item);
+        Map<String, Object> item = new HashMap<String, Object>();
+        item.put("image",R.drawable.business);
+        item.put("destiny","Stockholm");
+        item.put("date","02/02/2015 to 05/02/2015");
+        item.put("total","Total Spend: Kr 314,00");
+        item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
+        trips.add(item);
+
         cursor.close();
         return trips;
     }
+
 
         private double calcTotalSpend(SQLiteDatabase db, String id) {
             Cursor cursor = db.rawQuery("SELECT SUM(value) FROM SPENDING WHERE TRIP_ID = ?", new String[]{ id });
@@ -134,6 +151,24 @@ import java.util.Map;
             Log.d("SUM(value)","VALUE: " + cursor.getDouble(0));
             cursor.close();
             return total;
+        }
+
+        public void alertOmLimitValue(){
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Alert");
+            builder.setMessage(R.string.limit_alert);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+
+                }
+            });
+            alert = builder.create();
+            alert.show();
+
         }
 
 
@@ -195,6 +230,10 @@ import java.util.Map;
     @Override
     public void onClick(DialogInterface dialog, int item) {
         Log.d("Options Dialog","I am Here in OPTIONS ");
+
+//        if(limitValue>=budget){
+//
+//        }
         switch (item){
 
             case 0: // Edit

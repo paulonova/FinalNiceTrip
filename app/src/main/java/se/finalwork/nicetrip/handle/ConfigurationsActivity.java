@@ -21,8 +21,6 @@ public class ConfigurationsActivity extends Activity {
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingFragment()).commit();
 
-
-
     }
 
     // Method to read preferences(String)
@@ -72,23 +70,28 @@ public class ConfigurationsActivity extends Activity {
                 }
             });
 
-//            Preference showValueLimit = findPreference("value_limit");
-//            showValueLimit.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            Preference showValueLimit = findPreference("value_limit");
+            showValueLimit.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+
+//                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                    SharedPreferences.Editor editor = pref.edit();
+//                    editor.putString("value_limit", "80");
+//                    editor.commit();
+
+//                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//                    String valueLimit = prefs.getString("value_limit", null);
 //
-//                @Override
-//                public boolean onPreferenceClick(Preference preference) {
-//
-////                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-////                    String valueLimit = prefs.getString("value_limit", null);
-////
-////
-////
-////                    Toast.makeText(getApplicationContext(), "ValueLimit: " + valueLimit, Toast.LENGTH_LONG).show();
 //
 //
-//                    return false;
-//                }
-//            });
+//                    Toast.makeText(getApplicationContext(), "ValueLimit: " + valueLimit, Toast.LENGTH_LONG).show();
+
+
+                    return false;
+                }
+            });
 
 
 

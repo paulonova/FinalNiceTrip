@@ -21,7 +21,7 @@ import java.util.Calendar;
 
 
 
-public class NewTripActivity extends Activity implements View.OnClickListener  {    //
+public class NewTripActivity extends Activity implements View.OnClickListener  {
 
     private int year;
     private int month;
@@ -38,6 +38,7 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
     private DatabaseHelper helper;
     private EditText destiny, budget, numberPeople;
     private RadioGroup radioGroup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,6 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
         numberPeople = (EditText)findViewById(R.id.number_people);
 
         saveBtn = (Button)findViewById(R.id.save_trip);
-
 
 
         // Prepare access to database..
@@ -149,8 +149,6 @@ public class NewTripActivity extends Activity implements View.OnClickListener  {
         values.put("exit_date", exitBtn.getText().toString());
         values.put("budget", budget.getText().toString());
         values.put("number_peoples", numberPeople.getText().toString());
-
-
 
         int type = radioGroup.getCheckedRadioButtonId();
         if(type == R.id.vacationBtn){

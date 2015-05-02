@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,7 +20,7 @@ public class NiceTripDAO {
     private DatabaseHelper helper;
     private SQLiteDatabase db;
 
-    // Constructor recieve the context and initiate the DatabaseHelper..
+    // Constructor receive the context and initiate the DatabaseHelper..
     public NiceTripDAO(Context context) {
         helper = new DatabaseHelper(context);
     }
@@ -65,11 +66,11 @@ public class NiceTripDAO {
 
         // From the Constructor
         Trip trip = new Trip(
-                cursor.getLong(cursor.getColumnIndex(Trip._ID)),
+                cursor.getInt(cursor.getColumnIndex(Trip._ID)),
                 cursor.getString(cursor.getColumnIndex(Trip.DESTINY)),
                 cursor.getInt(cursor.getColumnIndex(Trip.TYPE_TRIP)),
-                new Date(cursor.getLong(cursor.getColumnIndex(Trip.ARRIVAL_DATE))),
-                new Date(cursor.getLong(cursor.getColumnIndex(Trip.EXIT_DATE))),
+                cursor.getString(cursor.getColumnIndex(Trip.ARRIVAL_DATE)),
+                cursor.getString(cursor.getColumnIndex(Trip.EXIT_DATE)),
                 cursor.getDouble(cursor.getColumnIndex(Trip.BUDGET)),
                 cursor.getInt(cursor.getColumnIndex(Trip.NUMBER_PEOPLES)));
 
@@ -83,12 +84,16 @@ public class NiceTripDAO {
 
         values.put(Trip.DESTINY, trip.getDestiny());
         values.put(Trip.TYPE_TRIP, trip.getTypeTrip());
-        values.put(Trip.ARRIVAL_DATE, trip.getArrivalDate().getTime());
-        values.put(Trip.EXIT_DATE, trip.getExitDate().getTime());
+        values.put(Trip.ARRIVAL_DATE, trip.getArrivalDate());
+        values.put(Trip.EXIT_DATE, trip.getExitDate());
         values.put(Trip.BUDGET, trip.getBudget());
         values.put(Trip.NUMBER_PEOPLES, trip.getNumberPeoples());
 
         return getDb().insert(Trip.TABLE, null, values);
+
+        //long result = db.insert("trip", null, values);
+
+
     }
 
 

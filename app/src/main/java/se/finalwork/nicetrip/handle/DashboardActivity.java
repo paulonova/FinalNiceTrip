@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +24,31 @@ public class DashboardActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
+
+        SharedPreferences pref = getSharedPreferences("value_limit", 0);
+        String valueLimit = pref.getString("value_limit", null);
+        Log.d("valueLimit", "LimitValue Check: " + valueLimit);
+
+        if(valueLimit == null){
+            SharedPreferences pref2 = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor editor = pref2.edit();
+            editor.putString("value_limit", "80").toString();
+            editor.apply();
+            Log.d("valueLimit", "Creating a LimitValue... ");
+        }else{
+            //Do nothing
+            Log.d("valueLimit", "LimitValue: " +valueLimit);
+        }
+
+
+
+
+
+
+
+
     }
+
 
 
     public void selectOption(View v){

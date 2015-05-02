@@ -42,8 +42,8 @@ public class SpendingActivity extends Activity  { //implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.spending);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.category_spend, android.R.layout.simple_spinner_item);
         category = (Spinner)findViewById(R.id.category);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.category_spend, R.layout.spinner_layout);
         category.setAdapter(adapter);
 
         value = (EditText)findViewById(R.id.value);

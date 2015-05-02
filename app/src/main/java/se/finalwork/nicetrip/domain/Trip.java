@@ -5,11 +5,11 @@ import java.util.Date;
 
 public class Trip {
 
-    private Long id;
+    private Integer id;
     private String destiny;
     private Integer typeTrip;
-    private Date arrivalDate;
-    private Date exitDate;
+    private String arrivalDate;
+    private String exitDate;
     private Double budget;
     private Integer numberPeoples;
 
@@ -30,7 +30,7 @@ public class Trip {
     }
 
     // Constructor
-    public Trip(Long id, String destiny, Integer typeTrip, Date arrivalDate, Date exitDate, Double budget, Integer numberPeoples) {
+    public Trip(Integer id, String destiny, Integer typeTrip, String arrivalDate, String exitDate, Double budget, Integer numberPeoples) {
         this.id = id;
         this.destiny = destiny;
         this.typeTrip = typeTrip;
@@ -42,11 +42,11 @@ public class Trip {
 
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -66,19 +66,19 @@ public class Trip {
         this.typeTrip = typeTrip;
     }
 
-    public Date getArrivalDate() {
+    public String getArrivalDate() {
         return arrivalDate;
     }
 
-    public void setArrivalDate(Date arrivalDate) {
+    public void setArrivalDate(String arrivalDate) {
         this.arrivalDate = arrivalDate;
     }
 
-    public Date getExitDate() {
+    public String getExitDate() {
         return exitDate;
     }
 
-    public void setExitDate(Date exitDate) {
+    public void setExitDate(String exitDate) {
         this.exitDate = exitDate;
     }
 
