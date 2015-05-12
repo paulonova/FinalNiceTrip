@@ -1,11 +1,18 @@
 package se.finalwork.nicetrip.handle;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,10 +24,31 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import se.finalwork.nicetrip.dao.NiceTripDB;
+import se.finalwork.nicetrip.domain.Trip;
 
 
 public class NewTripActivity extends Activity implements View.OnClickListener {
+
+
+    private int year;
+    private int month;
+    private int day;
+    private Button arrivalBtn;
+    private Button exitBtn;
+    private Button saveBtn;
+    private RadioGroup typeTrip;
+    private String typeTripText;
+    private DatabaseHelper helper;
+    private EditText destiny, budget, numberPeople;
+    private RadioGroup radioGroup;
+    private Trip trip;
+    private int id_Actual;
 
     Calendar arrivalCalendar = Calendar.getInstance();
     Calendar exitCalendar = Calendar.getInstance();
@@ -47,17 +75,7 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
 
         }
     };
-    private int year;
-    private int month;
-    private int day;
-    private Button arrivalBtn;
-    private Button exitBtn;
-    private Button saveBtn;
-    private RadioGroup typeTrip;
-    private String typeTripText;
-    private DatabaseHelper helper;
-    private EditText destiny, budget, numberPeople;
-    private RadioGroup radioGroup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,12 +119,16 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
 
     public void setArriveDate() {
 
-        new DatePickerDialog(NewTripActivity.this, dArrival, arrivalCalendar.get(Calendar.YEAR), arrivalCalendar.get(Calendar.MONTH), arrivalCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(NewTripActivity.this, dArrival, arrivalCalendar.get(Calendar.YEAR),
+                                                             arrivalCalendar.get(Calendar.MONTH),
+                                                             arrivalCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     public void setExitDate() {
 
-        new DatePickerDialog(NewTripActivity.this, dExit, exitCalendar.get(Calendar.YEAR), exitCalendar.get(Calendar.MONTH), exitCalendar.get(Calendar.DAY_OF_MONTH)).show();
+        new DatePickerDialog(NewTripActivity.this, dExit, exitCalendar.get(Calendar.YEAR),
+                                                          exitCalendar.get(Calendar.MONTH),
+                                                          exitCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
 
     public void updateArrivalDate() {
@@ -127,47 +149,92 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
 
     }
 
-    public void SetActualTrip() {
 
+
+    // Take saved trip from Database and save it again att the Trip object..
+    public void setTripDomainInfo(){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql = "SELECT _id, type_trip, destiny, arrive_date, exit_date, budget, number_peoples FROM trip";
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
+
+
+        trip = new Trip();
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+
+            trip.setId(cursor.getInt(0));
+            trip.setTypeTrip(cursor.getString(1));
+            trip.setDestiny(cursor.getString(2));
+            trip.setArrivalDate(cursor.getString(3));
+            trip.setExitDate(cursor.getString(4));
+            trip.setBudget(cursor.getDouble(5));
+            trip.setNumberPeoples(cursor.getInt(6));
+            trip.setActualTrip(trip.getId());
+
+            cursor.moveToNext();
+
+        }
+
+        cursor.close();
+        Log.d("SetTripDomainInfo", " INFO: TRIP_DOMAIN " + trip.getId() + " - " + trip.getTypeTrip() + " - " + trip.getDestiny() + " - " + trip.getArrivalDate()
+                + " - " + trip.getExitDate() + " - " + trip.getBudget() + " - " + trip.getNumberPeoples() + "  Actual trip: " + trip.getActualTrip());
     }
 
 
+
+    // Button SAVE TRIP..
     public void saveTrip(View view) {
-        SQLiteDatabase db = helper.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put("destiny", destiny.getText().toString());
-        values.put("arrive_date", arrivalBtn.getText().toString());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        trip = new Trip();
 
-        values.put("exit_date", exitBtn.getText().toString());
-        values.put("budget", budget.getText().toString());
-        values.put("number_peoples", numberPeople.getText().toString());
+        try {
+            ContentValues values = new ContentValues();
+            values.put("destiny", destiny.getText().toString());
+            values.put("arrive_date", arrivalBtn.getText().toString());
 
-        int type = radioGroup.getCheckedRadioButtonId();
-        if (type == R.id.vacationBtn) {
-            values.put("type_trip", Constants.TRIP_VACATIONS);
-            setTypeTripText(getString(R.string.vacation));
-        } else {
-            values.put("type_trip", Constants.TRIP_BUSINESS);
-            setTypeTripText(getString(R.string.business));
+            values.put("exit_date", exitBtn.getText().toString());
+            values.put("budget", budget.getText().toString());
+            values.put("number_peoples", numberPeople.getText().toString());
+
+            int type = radioGroup.getCheckedRadioButtonId();
+            if (type == R.id.vacationBtn) {
+                values.put("type_trip", Constants.TRIP_VACATIONS);
+                setTypeTripText(getString(R.string.vacation));
+            } else {
+                values.put("type_trip", Constants.TRIP_BUSINESS);
+                setTypeTripText(getString(R.string.business));
+            }
+
+            // Show all information to save in DB..
+            Log.d("Saved Informations", "Info: " + destiny.getText().toString() + " - " + getTypeTripText() + " - " +
+                    arrivalBtn.getText().toString() + " - " + exitBtn.getText().toString() + " - " +
+                    budget.getText().toString() + " - " + numberPeople.getText().toString());
+
+            long result = db.insert("trip", null, values);
+
+            if (result != -1) {
+                Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
+        }catch (SQLiteException e){
+
+            Toast.makeText(this, "Register NOT saved! " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        // Show all information to save in DB..
-        Log.d("Saved Informations", "Info: " + destiny.getText().toString() + " - " + getTypeTripText() + " - " +
-                arrivalBtn.getText().toString() + " - " + exitBtn.getText().toString() + " - " +
-                budget.getText().toString() + " - " + numberPeople.getText().toString());
 
-        long result = db.insert("trip", null, values);
-
-        if (result != -1) {
-            Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
-            finish();
-        } else {
-            Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
-        }
-
+        // Get the current trip ID
+        String sql = "SELECT _id FROM trip";
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToLast();
+        trip.setActualTrip(cursor.getInt(0));
+        Log.d("setActualTrip"," TESTE ATUAL " + cursor.getInt(0));
+        setTripDomainInfo();
 
     }
+
 
 
     // Method to show the menu with exit button..
@@ -175,7 +242,6 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.trip_menu, menu);
-        //getMenuInflater().inflate(R.menu.menu_first_page, menu);
         return true;
     }
 
@@ -184,13 +250,10 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.new_spend:
-                startActivity(new Intent(this, SpendingActivity.class));
+            case R.id.exit_trip:
+                finish();
                 return true;
-            case R.id.remove_trip:
-                // remove from DataBase
-                Toast.makeText(getApplicationContext(), "Remove from Database!", Toast.LENGTH_SHORT).show();
-                return true;
+
             default:
                 return super.onMenuItemSelected(featureId, item);
         }
@@ -198,9 +261,7 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -220,4 +281,9 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
     public void setTypeTripText(String typeTripText) {
         this.typeTripText = typeTripText;
     }
+
+
+
+
+
 }

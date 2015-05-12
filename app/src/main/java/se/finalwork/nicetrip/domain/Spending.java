@@ -1,8 +1,5 @@
 package se.finalwork.nicetrip.domain;
 
-import java.util.Date;
-
-
 public class Spending {
 
     public static final String TABLE = "spending";
@@ -15,8 +12,9 @@ public class Spending {
     public static final String PLACE = "place";
     public static final String[] COLUMNS = new String[]{
             _ID, TRIP_ID, CATEGORY, DATE, DESCRIPTION, VALUE, PLACE};
-    private Long id;
-    private Date date;
+
+    private Integer id;
+    private String date;
     private String category;
     private String description;
     private Double value;
@@ -28,8 +26,7 @@ public class Spending {
     }
 
     // Constructor
-    public Spending(Long id, Date date, String category, String description, Double value, String place, Integer tripId) {
-        this.id = id;
+    public Spending(String date, String category, String description, Double value, String place, Integer tripId) {
         this.date = date;
         this.category = category;
         this.description = description;
@@ -40,19 +37,19 @@ public class Spending {
 
 
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

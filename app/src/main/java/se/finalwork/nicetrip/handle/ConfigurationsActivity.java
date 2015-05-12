@@ -9,23 +9,16 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
+
+import se.finalwork.nicetrip.dao.NiceTripDB;
 
 
 public class ConfigurationsActivity extends Activity {
 
-    // Method to read preferences(String)
-    public static String Read(Context context, final String key) {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        return pref.getString(key, "");
-    }
+    NiceTripDB dbHelper;
 
-    // Methods to write preferences(String)
-    public static void Write(Context context, final String key, final String value) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(key, value);
-        editor.commit();
-    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +37,19 @@ public class ConfigurationsActivity extends Activity {
             super.onCreate(savedInstanceState);
             // Load the preferences from an XML resource
             addPreferencesFromResource(R.xml.preference);
+
+
+
+            Preference showActualTrip = findPreference("actual_trip_mode");
+            showActualTrip.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+
+                    Toast.makeText(getApplicationContext(), R.string.trip_mode_text, Toast.LENGTH_LONG).show();
+                    return false;
+                }
+            });
 
 
             Preference showDefaultLogin = findPreference("default_mode");
@@ -65,34 +71,30 @@ public class ConfigurationsActivity extends Activity {
                 }
             });
 
+
+
+
             Preference showValueLimit = findPreference("value_limit");
             showValueLimit.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
 
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-
-//                    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//                    SharedPreferences.Editor editor = pref.edit();
-//                    editor.putString("value_limit", "80");
-//                    editor.commit();
-
-//                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//                    String valueLimit = prefs.getString("value_limit", null);
-//
-//
-//
-//                    Toast.makeText(getApplicationContext(), "ValueLimit: " + valueLimit, Toast.LENGTH_LONG).show();
-
-
+                    //codes in EditLimitValuePreference..
                     return false;
                 }
             });
 
 
+            Preference showDeleteDatabase = findPreference("delete_database");
+            showDeleteDatabase.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+//                   // Codes in ResetDataBase class..
+                    return false;
+                }
+            });
         }
-
-
     }
-
 
 }

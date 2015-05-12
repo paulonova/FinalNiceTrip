@@ -81,27 +81,38 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
 
-    <string name="preference">Trip Settings..</string>
+    <string name="preference">Spend Settings..</string>
     <string name="login_set">Set Login..</string>
 
     <string name="mode_trip_summary">Direct spending to the actual trip..</string>
     <string name="trip_mode">Trip Mode</string>
     <string name="default_mode_summary">Set back the Login Page..</string>
     <string name="set_login_page">Set Login Page</string>
+    <string name="actual_trip_mode">Actual trip mode is always on</string>
+    <string name="actual_trip">Actual Trip</string>
+    <string name="trip_mode_text">All spending are registered in the actual trip..</string>
+    <string name="database">Setting Database..</string>
 
-    default_mode_summary
+    <string name="database_summary">Delete and restore all database</string>
+    <string name="delete_database">Delete Database</string>
+
+
+
     <string name="set_value_limit">Set Limit Value %</string>
     <string name="value_limit_summary">Notify when the spendings are going over the limit</string>
     <string name="value_limit">Value Limit</string>
     <string name="title_activity_configurations">Configurations</string>
 
     <string name="close_alert">This application will close! Are you sure?</string>
+    <string name="database_alert">Database Alert!</string>
     <string name="limit_alert">The fields can not be empty</string>
     <string name="error_empty">The fields can not be empty</string>
     <string name="error_autentication">Username or Password is wrong! Please, try again..</string>
     <string name="register_error">username or password is empty..</string>
     <string name="register_ok">Register saved successfully!</string>
     <string name="money">$ </string>
+    <string name="delete_database_alert">Database will be deleted and restored! Are you sure?  </string>
+
 
 
 </resources>

@@ -28,10 +28,7 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
     private List<Map<String, Object>> spend;
     private String dateBefore = "";
 
-    /* db.execSQL("CREATE TABLE spending (_id INTEGER PRIMARY KEY," +
-                " category TEXT, date DATE, value DOUBLE," +
-                " description TEXT, place TEXT, trip_id INTEGER," +
-                " FOREIGN KEY(trip_id) REFERENCES trip(_id));");*/
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,19 +52,33 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
 
     private List<Map<String, Object>> spendList() {
 
+
+        // Get the actual trip _id to save into him..
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "SELECT date, description, value, category, trip_id FROM spending";
+        String sql = "SELECT _id FROM trip";
+        Cursor c = db.rawQuery(sql, null);
+        c.moveToLast();
+        int id = c.getInt(0);
+        Log.d("Test ID","ID: " + id);
+
+
+
+        //SQLiteDatabase db = helper.getReadableDatabase();
+        String sql1 = "SELECT date, description, value, category, trip_id FROM spending WHERE trip_id=?";
         //Cursor cursor = db.rawQuery("SELECT date, description, value, category FROM spending WHERE trip_id = ?", new String[]{id});
-        Cursor cursor = db.rawQuery(sql, null);
+        Cursor cursor = db.rawQuery(sql1, new String[]{Integer.toString(id)});
         cursor.moveToFirst();
+
         spend = new ArrayList<Map<String, Object>>();
 
         Log.d("SpendListActivity", "Passing here..");
+
 
         for (int i = 0; i < cursor.getCount(); i++) {
 
             Log.d("SpendListActivity", "Passing here too..");
             String date = cursor.getString(0);
+            Log.d("Date", "date: " + date);
             String description = cursor.getString(1);
             double value = cursor.getDouble(2);
             String category = cursor.getString(3);
@@ -96,12 +107,6 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
             cursor.moveToNext();
         }
 
-//        Map<String, Object> item = new HashMap<String, Object>();
-//        item.put("date","05/08/2010");
-//        item.put("description","Hotel");
-//        item.put("value","Kr 350,00");
-//        item.put("category",R.color.category_accommodation);
-//        spend.add(item);
 
         return spend;
     }
@@ -125,16 +130,16 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.remove_spending) {
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-            spend.remove(info.position);
-            getListView().invalidateViews();
-            dateBefore = "";
-
-            //Remove from Database
-            Toast.makeText(getApplicationContext(), "Remove from Database..", Toast.LENGTH_SHORT).show();
-            return true;
-        }
+//        if (item.getItemId() == R.id.remove_spending) {
+//            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+//            spend.remove(info.position);
+//            getListView().invalidateViews();
+//            dateBefore = "";
+//
+//            //Remove from Database
+//            Toast.makeText(getApplicationContext(), "Remove from Database..", Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
 
         return super.onContextItemSelected(item);
     }

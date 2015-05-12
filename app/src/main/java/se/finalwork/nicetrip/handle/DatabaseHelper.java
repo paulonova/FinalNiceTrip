@@ -4,20 +4,26 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-/**
- * Created by PAULO NOVA on 2015-04-04.
- */
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATA_BASE = "NiceTrip";
     private static int VERSION = 1;
 
 
+    // Constructor
+    public DatabaseHelper(Context context) {
+        super(context, DATA_BASE, null, VERSION);
+    }
+
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
+
+
         db.execSQL("CREATE TABLE trip (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "destiny TEXT, type_trip INTEGER, arrive_date DATE," +
+                "destiny TEXT, type_trip TEXT, arrive_date DATE," +
                 "exit_date DATE, budget DOUBLE," +
                 "number_peoples INTEGER);");
 
@@ -31,11 +37,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
-        //db.execSQL("ALTER TABLE spending ADD COLUMN person TEXT");
+        db.execSQL("DROP TABLE trip");
+        db.execSQL("DROP TABLE spending");
+        onCreate(db);
 
     }
 
-    public DatabaseHelper(Context context) {
-        super(context, DATA_BASE, null, VERSION);
-    }
+
 }

@@ -11,21 +11,24 @@ public class Trip {
     public static final String NUMBER_PEOPLES = "number_peoples";
     public static final String TYPE_TRIP = "type_trip";
     public static final String[] COLUMNS = new String[]{
-            _ID, DESTINY, ARRIVAL_DATE, EXIT_DATE, TYPE_TRIP, BUDGET, NUMBER_PEOPLES};
+                                _ID, DESTINY, ARRIVAL_DATE, EXIT_DATE, TYPE_TRIP, BUDGET, NUMBER_PEOPLES};
+
+
     private Integer id;
     private String destiny;
-    private Integer typeTrip;
+    private String typeTrip;
     private String arrivalDate;
     private String exitDate;
     private Double budget;
     private Integer numberPeoples;
+    private Integer actualTrip;
 
     // Constructor
     public Trip() {
     }
 
     // Constructor
-    public Trip(Integer id, String destiny, Integer typeTrip, String arrivalDate, String exitDate, Double budget, Integer numberPeoples) {
+    public Trip(Integer id, String destiny, String typeTrip, String arrivalDate, String exitDate, Double budget, Integer numberPeoples) {
         this.id = id;
         this.destiny = destiny;
         this.typeTrip = typeTrip;
@@ -53,11 +56,11 @@ public class Trip {
         this.destiny = destiny;
     }
 
-    public Integer getTypeTrip() {
+    public String getTypeTrip() {
         return typeTrip;
     }
 
-    public void setTypeTrip(Integer typeTrip) {
+    public void setTypeTrip(String typeTrip) {
         this.typeTrip = typeTrip;
     }
 
@@ -93,4 +96,11 @@ public class Trip {
         this.numberPeoples = numberPeoples;
     }
 
+    public Integer getActualTrip() {
+        return actualTrip;
+    }
+
+    public void setActualTrip(Integer actualTrip) {
+        this.actualTrip = actualTrip;
+    }
 }

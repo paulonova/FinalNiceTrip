@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,29 +37,25 @@ public class TripListActivity extends ListActivity
     private SimpleDateFormat dateFormat;
     private Double limitValue;
     private AlertDialog alert;
-    private List<Map<String, Object>> trips;
+    private List<Map<String, Object>> itemTrips;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Getting the Limit Value from SharedPreferences..
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = pref.edit();
-
-        SharedPreferences pref2 = getSharedPreferences("value_limit", 1);
-        String valueLimit = pref2.getString("value_limit", null);
-        Log.d("LIMIT VALUE:", "Value: " + valueLimit);
 
         helper = new DatabaseHelper(this);
         dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
 
-        // Instantiate database and retrieve the limit value of the budget..
-//        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-//        String value = preferences.getString(LIMIT_VALUE, "-1");
+        // Instantiate SharedPreferences and retrieve the limit value of the budget..
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String value = preferences.getString("value_limit", "0");
+        Log.d("Limit Value Saved", "The Value is: " + value);
 
-        limitValue = Double.valueOf(valueLimit);
+        limitValue = Double.valueOf(value);
 
         String[] from = {"image", "destiny", "date", "total", "progressBar"};
         int[] to = {R.id.type_trip, R.id.destiny, R.id.date, R.id.total, R.id.progressBar};
@@ -75,21 +72,23 @@ public class TripListActivity extends ListActivity
     private List<Map<String, Object>> listTrips() {
 
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "SELECT _id, type_trip, destiny, arrive_date, exit_date, budget FROM trip";
+        String sql = "SELECT _id, type_trip, destiny, arrive_date, exit_date, budget, number_peoples FROM trip";
         Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToFirst();
-        trips = new ArrayList<Map<String, Object>>();
+        itemTrips = new ArrayList<Map<String, Object>>();
+
 
         for (int i = 0; i < cursor.getCount(); i++) {
 
 
             // Getting values from DB..
             String id = cursor.getString(0);
-            int typeTrip = cursor.getInt(1);
+            String typeTrip = cursor.getString(1);
             String destiny = cursor.getString(2);
             String arrivalDate = cursor.getString(3);
             String exitDate = cursor.getString(4);
             double budget = cursor.getDouble(5);
+            int numberPeoples = cursor.getInt(6);
 
 
             Log.d("Database Info TRIP", "Info: " + "ID: " + id + " - " + "TypeTrip: " + typeTrip + " - " +
@@ -98,7 +97,7 @@ public class TripListActivity extends ListActivity
 
             Map<String, Object> item = new HashMap<String, Object>();
 
-            if (typeTrip == Constants.TRIP_VACATIONS) {
+            if (typeTrip.contains(Constants.TRIP_VACATIONS)) {
                 item.put("image", R.drawable.vacations);
             } else {
                 item.put("image", R.drawable.business);
@@ -109,30 +108,30 @@ public class TripListActivity extends ListActivity
             item.put("date", arrivalDate + " to " + exitDate);
 
             double totalSpend = calcTotalSpend(db, id);
-            item.put("total", "Total Spend: " + totalSpend);
+            item.put("total", "Total Spend: " + totalSpend + "   Total peoples: " + numberPeoples);
             Log.d("TOTAL_SPEND", "TOTAL: " + totalSpend);
 
 
             double alert = budget * limitValue / 100;
-            Double[] values = new Double[]{budget, alert, 1600d};  // Value not REAL !
+            Double[] values = new Double[]{budget, alert, 500d};  // Value not REAL !
             Log.d("ProgressBar", "values: " + "Budget: " + budget + " Alert: " + alert + " Total: " + totalSpend);
             item.put("progressBar", values);
-            trips.add(item);
+            itemTrips.add(item);
             cursor.moveToNext();
 
         }
 
         // Old testing codes..
-        Map<String, Object> item = new HashMap<String, Object>();
-        item.put("image", R.drawable.business);
-        item.put("destiny", "Stockholm");
-        item.put("date", "02/02/2015 to 05/02/2015");
-        item.put("total", "Total Spend: Kr 314,00");
-        item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
-        trips.add(item);
+//        Map<String, Object> item = new HashMap<String, Object>();
+//        item.put("image", R.drawable.business);
+//        item.put("destiny", "Stockholm");
+//        item.put("date", "02/02/2015 to 05/02/2015");
+//        item.put("total", "Total Spend: Kr 314,00");
+//        item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
+//        itemTrips.add(item);
 
         cursor.close();
-        return trips;
+        return itemTrips;
     }
 
 
@@ -167,6 +166,7 @@ public class TripListActivity extends ListActivity
     @Override
     public boolean setViewValue(View view, Object data, String textRepresentation) {
 
+
         if (view.getId() == R.id.progressBar) {
             Double values[] = (Double[]) data;
             ProgressBar progressBar = (ProgressBar) view;
@@ -186,17 +186,19 @@ public class TripListActivity extends ListActivity
         this.selectedTrip = position;
         alertDialog.show();
 
-     /*   Map<String, Object> map = trips.get(position);
+        Map<String, Object> map = itemTrips.get(position);
         String destiny = (String) map.get("destiny");
+
         String message = "Selected trip: " + destiny;
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-        startActivity(new Intent(this, SpendListActivity.class)); */
+        Toast.makeText(this, message + " - " + id, Toast.LENGTH_SHORT).show();
+//        startActivity(new Intent(this, SpendListActivity.class));
+
+        /*Aqui quando o Intent se direcionar para SpendingListActivity, eu envio como Extra o ID do item selecionado..*/
 
     }
 
     private AlertDialog buildAlertDialog() {
         final CharSequence[] items = {
-                getString(R.string.edit),
                 getString(R.string.new_spend_dialog),
                 getString(R.string.made_expenses),
                 getString(R.string.remove_dialog)};
@@ -227,23 +229,22 @@ public class TripListActivity extends ListActivity
 //        }
         switch (item) {
 
-            case 0: // Edit
-                startActivity(new Intent(this, NewTripActivity.class));
-                break;
-            case 1: //New Spend
+            case 0: // New Spend
                 startActivity(new Intent(this, SpendingActivity.class));
                 break;
-            case 2: //Expenses Made
+
+            case 1: //Expenses Made
                 getSelectedItemId();
                 Log.d("getListView()", "ID: " + getSelectedItemId());
                 startActivity(new Intent(this, SpendListActivity.class));
                 break;
-            case 3: //Remove
+
+            case 2: //Remove
                 dialogConfirmation.show();
                 break;
 
             case DialogInterface.BUTTON_POSITIVE:
-                trips.remove(selectedTrip);
+                itemTrips.remove(selectedTrip);
                 getListView().invalidateViews();
                 break;
 

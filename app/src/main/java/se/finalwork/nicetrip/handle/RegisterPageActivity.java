@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -64,7 +65,8 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
         String username = preferences.getString(USER_NAME, "");
         String password = preferences.getString(PASSWORD, "");
 
-        Toast.makeText(getApplicationContext(), R.string.register_error, Toast.LENGTH_SHORT).show();
+        Log.d("ShowSharedInfo","Username: " + username + " Password: "+ password);
+
     }
 
     public void checkInputValues() {
@@ -72,7 +74,7 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
         String username = regUsername.getText().toString();
         String password = regPassword.getText().toString();
 
-        if (username.equals("") || password.equals("")) {
+        if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(getApplicationContext(), R.string.register_error, Toast.LENGTH_SHORT).show();
 
         } else {
@@ -83,7 +85,7 @@ public class RegisterPageActivity extends Activity implements View.OnClickListen
             editor.apply();
             Toast.makeText(getApplicationContext(), R.string.register_ok, Toast.LENGTH_SHORT).show();
             finish();
-            showSharedInfo();
+
         }
 
 

@@ -18,25 +18,42 @@ public class DashboardActivity extends Activity {
 
     private AlertDialog alert;
 
+
+    private SharedPreferences.Editor sharedPreferencesEditor;
+    private String limitValuePreference = "80";
+    private String resultPreference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dashboard);
 
-        SharedPreferences pref = getSharedPreferences("value_limit", 0);
-        String valueLimit = pref.getString("value_limit", null);
-        Log.d("valueLimit", "LimitValue Check: " + valueLimit);
+        // Instantiate SharedPreferences and retrieve the limit value of the budget..
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String value = preferences.getString("value_limit", "null");
+        Log.d("Limit Value Saved", "The Value is: " + value);
 
-        if (valueLimit == null) {
-            SharedPreferences pref2 = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            SharedPreferences.Editor editor = pref2.edit();
-            editor.putString("value_limit", "80").toString();
-            editor.apply();
-            Log.d("valueLimit", "Creating a LimitValue... ");
-        } else {
-            //Do nothing
-            Log.d("valueLimit", "LimitValue: " + valueLimit);
+//        SharedPreferences preferenceSettings = getPreferences(PREFERENCE_MODE_PRIVATE);
+//        resultPreference = preferenceSettings.getString("value_limit", "null");
+//        Log.d("valueLimit01", "LimitValue Check01: " + getResultPreference());
+
+        if(value.contains("null")){
+            sharedPreferencesEditor = preferences.edit();
+            sharedPreferencesEditor.putString("value_limit", limitValuePreference);
+            boolean res = sharedPreferencesEditor.commit();
+
+            //resultPreference = preferenceSettings.getString("value_limit", "value");
+            setResultPreference(preferences.getString("value_limit", "value"));
+            Log.d("Limit Value Saved", "Saving limit value.. " + limitValuePreference + " Commit: " + res);
+
+        }else{
+
+            Log.d("Limit Value", "Not saved.. ");
+
         }
+
+        Log.d("Limit Value Saved", "The Value is: " + value);
+        Log.d("Limit Value Saved", "The limitValuePreference is: " + limitValuePreference);
 
     }
 
@@ -59,9 +76,9 @@ public class DashboardActivity extends Activity {
         }
 
         //  Shows a Message Toast with the selected item..
-     /* TextView textView = (TextView) v;
-        String option = "Option: " + textView.getText().toString();
-        Toast.makeText(this, option, Toast.LENGTH_LONG).show(); */
+         /* TextView textView = (TextView) v;
+            String option = "Option: " + textView.getText().toString();
+            Toast.makeText(this, option, Toast.LENGTH_LONG).show(); */
     }
 
     // Method to show the menu with exit button..
@@ -130,5 +147,12 @@ public class DashboardActivity extends Activity {
 
     }
 
+    // Getters and Setters
+    public String getResultPreference() {
+        return resultPreference;
+    }
 
+    public void setResultPreference(String resultPreference) {
+        this.resultPreference = resultPreference;
+    }
 }
