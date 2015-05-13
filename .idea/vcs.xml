@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="D:\ARQUIVOS DO PAULO\SLUT PROJEKT NICE TRIP\SAVING A GOOD PROJECT\NiceTrip\NiceTripFinal" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/NiceTripApp" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/NiceTripFinal" vcs="Git" />
   </component>
 </project>
