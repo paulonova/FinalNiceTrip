@@ -19,8 +19,7 @@ public class EditLimitValuePreference extends DialogPreference {
     SharedPreferences.Editor editor = pref.edit();
     String valueLimit = pref.getString("value_limit", null);
     private EditText setLimit;
-    private Button ok;
-    private Button cancel;
+
 
 
     public EditLimitValuePreference(Context context, AttributeSet attrs) {
