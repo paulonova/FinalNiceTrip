@@ -50,6 +50,12 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
     private Trip trip;
     private int id_Actual;
 
+    private String compareDestiny;
+    private String selectedDestiny;
+    private String concatDestiny;
+
+
+
     Calendar arrivalCalendar = Calendar.getInstance();
     Calendar exitCalendar = Calendar.getInstance();
     DatePickerDialog.OnDateSetListener dArrival = new DatePickerDialog.OnDateSetListener() {
@@ -157,8 +163,6 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
         String sql = "SELECT _id, type_trip, destiny, arrive_date, exit_date, budget, number_peoples FROM trip";
         Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToFirst();
-
-
         trip = new Trip();
 
         for (int i = 0; i < cursor.getCount(); i++) {
@@ -237,6 +241,7 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
 
 
 
+
     // Method to show the menu with exit button..
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -282,8 +287,27 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
         this.typeTripText = typeTripText;
     }
 
+    public String getSelectedDestiny() {
+        return selectedDestiny;
+    }
 
+    public void setSelectedDestiny(String selectedDestiny) {
+        this.selectedDestiny = selectedDestiny;
+    }
 
+    public String getCompareDestiny() {
+        return compareDestiny;
+    }
 
+    public void setCompareDestiny(String compareDestiny) {
+        this.compareDestiny = compareDestiny;
+    }
 
+    public String getConcatDestiny() {
+        return concatDestiny;
+    }
+
+    public void setConcatDestiny(String concatDestiny) {
+        this.concatDestiny = concatDestiny;
+    }
 }

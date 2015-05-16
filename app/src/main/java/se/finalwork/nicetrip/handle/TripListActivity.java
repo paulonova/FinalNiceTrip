@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import se.finalwork.nicetrip.domain.Spending;
+import se.finalwork.nicetrip.domain.Trip;
+
 
 public class TripListActivity extends ListActivity
         implements AdapterView.OnItemClickListener, DialogInterface.OnClickListener, SimpleAdapter.ViewBinder {
@@ -38,13 +41,18 @@ public class TripListActivity extends ListActivity
     private Double limitValue;
     private AlertDialog alert;
     private List<Map<String, Object>> itemTrips;
+    private Trip trip;
+    private Spending spend;
+
+    private long selectItemID;
+    private String selectedTripDestination;
+    private long selectedDestinationId;
 
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         helper = new DatabaseHelper(this);
         dateFormat = new SimpleDateFormat("yyyy/MM/dd");
@@ -67,6 +75,14 @@ public class TripListActivity extends ListActivity
 
         this.alertDialog = buildAlertDialog();
         this.dialogConfirmation = buildDialogConfirmation();
+
+    }
+
+    // Controls the limit of budget..
+    public void checkLimitBudget(double totalSpend, double alert){
+        if(totalSpend >= alert){
+            alertOmLimitValue();
+        }
     }
 
     private List<Map<String, Object>> listTrips() {
@@ -90,6 +106,12 @@ public class TripListActivity extends ListActivity
             double budget = cursor.getDouble(5);
             int numberPeoples = cursor.getInt(6);
 
+            double alert = budget * limitValue / 100;
+            double totalSpend = calcTotalSpend(db, id);
+
+            // ***************************************************
+            //checkLimitBudget(totalSpend,alert);
+
 
             Log.d("Database Info TRIP", "Info: " + "ID: " + id + " - " + "TypeTrip: " + typeTrip + " - " +
                     "Destiny: " + destiny + " - " + "ArrivalDate: " + arrivalDate + " - " +
@@ -107,13 +129,12 @@ public class TripListActivity extends ListActivity
             item.put("destiny", destiny);
             item.put("date", arrivalDate + " to " + exitDate);
 
-            double totalSpend = calcTotalSpend(db, id);
+
             item.put("total", "Total Spend: " + totalSpend + "   Total peoples: " + numberPeoples);
             Log.d("TOTAL_SPEND", "TOTAL: " + totalSpend);
 
+            Double[] values = new Double[]{budget, alert, totalSpend};
 
-            double alert = budget * limitValue / 100;
-            Double[] values = new Double[]{budget, alert, 500d};  // Value not REAL !
             Log.d("ProgressBar", "values: " + "Budget: " + budget + " Alert: " + alert + " Total: " + totalSpend);
             item.put("progressBar", values);
             itemTrips.add(item);
@@ -134,6 +155,22 @@ public class TripListActivity extends ListActivity
         return itemTrips;
     }
 
+    // Used to get the ID from spending according to destiny
+    public int returnSelectedTripId(String destiny){
+
+
+
+
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql = "SELECT _id FROM trip WHERE destiny=?";
+        Cursor cursorID = db.rawQuery(sql, new String[]{destiny.toString()});
+        cursorID.moveToFirst();
+
+        int result = cursorID.getInt(0);
+        Log.d("Actual Id", "ID: " + result);
+        return result;
+    }
+
 
     private double calcTotalSpend(SQLiteDatabase db, String id) {
         Cursor cursor = db.rawQuery("SELECT SUM(value) FROM SPENDING WHERE TRIP_ID = ?", new String[]{id});
@@ -147,13 +184,12 @@ public class TripListActivity extends ListActivity
     public void alertOmLimitValue() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Alert");
+        builder.setTitle("Limit Alert");
         builder.setMessage(R.string.limit_alert);
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
 
             }
         });
@@ -189,11 +225,13 @@ public class TripListActivity extends ListActivity
         Map<String, Object> map = itemTrips.get(position);
         String destiny = (String) map.get("destiny");
 
-        String message = "Selected trip: " + destiny;
-        Toast.makeText(this, message + " - " + id, Toast.LENGTH_SHORT).show();
-//        startActivity(new Intent(this, SpendListActivity.class));
+        setSelectedTripDestination(destiny);
+        setSelectedDestinationId(returnSelectedTripId(destiny));
 
-        /*Aqui quando o Intent se direcionar para SpendingListActivity, eu envio como Extra o ID do item selecionado..*/
+        // Set the selected Trip _id
+        setSelectItemID(id + 1);
+        Log.d("SelectedTripID", "Destination: " + getSelectedTripDestination() + " ID: " +  returnSelectedTripId(destiny) + " ItemId: " + getSelectItemID());
+        Toast.makeText(this, "Destination: " + getSelectedTripDestination() + " ID: " +  returnSelectedTripId(destiny) + " ItemId: " + getSelectItemID(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -224,9 +262,7 @@ public class TripListActivity extends ListActivity
     public void onClick(DialogInterface dialog, int item) {
         Log.d("Options Dialog", "I am Here in OPTIONS ");
 
-//        if(limitValue>=budget){
-//
-//        }
+
         switch (item) {
 
             case 0: // New Spend
@@ -234,9 +270,11 @@ public class TripListActivity extends ListActivity
                 break;
 
             case 1: //Expenses Made
-                getSelectedItemId();
-                Log.d("getListView()", "ID: " + getSelectedItemId());
-                startActivity(new Intent(this, SpendListActivity.class));
+
+                Intent intent = new Intent(getApplicationContext(),SpendListActivity.class );
+                intent.putExtra("DestinationID", getSelectedDestinationId());  // Sending the selected trip..
+                intent.putExtra("ItemId", getSelectItemID());
+                startActivity(intent);
                 break;
 
             case 2: //Remove
@@ -245,6 +283,9 @@ public class TripListActivity extends ListActivity
 
             case DialogInterface.BUTTON_POSITIVE:
                 itemTrips.remove(selectedTrip);
+                SQLiteDatabase db = helper.getReadableDatabase();
+                db.delete("trip", "_id=?", new String[]{Long.toString(getSelectedDestinationId())});
+                db.delete("spending", "trip_id=?", new String[]{Long.toString(getSelectedDestinationId())});
                 getListView().invalidateViews();
                 break;
 
@@ -254,5 +295,27 @@ public class TripListActivity extends ListActivity
         }
     }
 
+    public long getSelectItemID() {
+        return selectItemID;
+    }
 
+    public void setSelectItemID(long selectTripID) {
+        this.selectItemID = selectTripID;
+    }
+
+    public String getSelectedTripDestination() {
+        return selectedTripDestination;
+    }
+
+    public void setSelectedTripDestination(String selectedTripDestination) {
+        this.selectedTripDestination = selectedTripDestination;
+    }
+
+    public long getSelectedDestinationId() {
+        return selectedDestinationId;
+    }
+
+    public void setSelectedDestinationId(long selectedDestinationId) {
+        this.selectedDestinationId = selectedDestinationId;
+    }
 }

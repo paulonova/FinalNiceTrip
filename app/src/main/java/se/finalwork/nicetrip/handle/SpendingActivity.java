@@ -89,72 +89,98 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
 
         // Prepare access to database..
         helper = new DatabaseHelper(this);
+        trip = new Trip();
 
+        checkEmptyData();
+
+    }
+
+    public boolean checkEmptyData(){
+        // Get the actual id..
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql = "SELECT _id FROM trip";
+        Cursor cursor = db.rawQuery(sql, null);
+        boolean s = cursor.moveToLast();
+
+        Log.d("Boolean"," Value: " + s);
+
+
+        return s;
     }
 
 
     public void saveSpendingOnSpendDomain() {
 
-        // Get the actual id..
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "SELECT _id FROM trip";
-        Cursor cursor = db.rawQuery(sql, null);
-        cursor.moveToLast();
-        int tripId = cursor.getInt(0);
-        Log.d("TripId from spending","tripId: " + tripId);
-
-        try {
-            spend = new Spending();
-            spend.setCategory(category.getSelectedItem().toString());
-            spend.setDate(selectedDate);
-            spend.setValue(Double.parseDouble(value.getText().toString()));
-            spend.setDescription(description.getText().toString());
-            spend.setPlace(place.getText().toString());
-            spend.setTripId(tripId);
-            Toast.makeText(getApplicationContext(), "Saved in Spending", Toast.LENGTH_SHORT).show();
+             // Get the actual id..
+            SQLiteDatabase db = helper.getReadableDatabase();
+            String sql = "SELECT _id FROM trip";
+            Cursor cursor = db.rawQuery(sql, null);
+            cursor.moveToLast();
+            int tripId = cursor.getInt(0);
+            Log.d("TripId from spending", "tripId: " + tripId);
 
 
-            Log.d("Saved on Spending", "values: " + spend.getCategory() + " - " + spend.getDate() + " - " +
-                    spend.getValue() + " - " + spend.getDescription() + " - " + spend.getPlace() + " actualID: " + spend.getTripId());
-            finish();
-        }catch (NumberFormatException e){
+            try {
+                spend = new Spending();
+                spend.setCategory(category.getSelectedItem().toString());
+                spend.setDate(selectedDate);
+                spend.setValue(Double.parseDouble(value.getText().toString()));
+                spend.setDescription(description.getText().toString());
+                spend.setPlace(place.getText().toString());
+                spend.setTripId(tripId);
 
-            Toast.makeText(getApplicationContext(), "Spending was not saved: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("Saved on Spending", "values: " + spend.getCategory() + " - " + spend.getDate() + " - " +
+                        spend.getValue() + " - " + spend.getDescription() + " - " + spend.getPlace() + " actualID: " + spend.getTripId());
+                finish();
+            }catch (NumberFormatException e){
 
-        }
+                Toast.makeText(getApplicationContext(), "Spending was not saved: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+
+            }
+
     }
 
 
     public void saveSpending(View view) {
 
-        saveSpendingOnSpendDomain();
-
-        SQLiteDatabase db = helper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put("category", spend.getCategory());
-        values.put("date", spend.getDate());
-        values.put("value", spend.getValue());
-        values.put("description", spend.getDescription());
-        values.put("place", spend.getPlace());
-        values.put("trip_id", spend.getTripId());
-
-        // Show all information to save in DB..
-        Log.d("Saved Informations", "Info: " + category.getSelectedItem().toString() + " - " + selectedDate + " - " +
-                value.getText().toString() + " - " + description.getText().toString() + " - " +
-                place.getText().toString() + " - " + spend.getTripId());
 
 
-        long result = db.insert("spending", null, values);
+        if(checkEmptyData()){
 
-        if (result != -1) {
-            Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
+            saveSpendingOnSpendDomain();
+            SQLiteDatabase db = helper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put("category", spend.getCategory());
+            values.put("date", spend.getDate());
+            values.put("value", spend.getValue());
+            values.put("description", spend.getDescription());
+            values.put("place", spend.getPlace());
+            values.put("trip_id", spend.getTripId());
+
+            // Show all information to save in DB..
+            Log.d("Saved Informations", "Info: " + category.getSelectedItem().toString() + " - " + selectedDate + " - " +
+                    value.getText().toString() + " - " + description.getText().toString() + " - " +
+                    place.getText().toString() + " - " + spend.getTripId());
+
+
+            long result = db.insert("spending", null, values);
+
+            if (result != -1) {
+                Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
+                finish();
+            } else {
+                Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }else {
+            Toast.makeText(getApplicationContext(), R.string.no_trip_msg, Toast.LENGTH_LONG).show();
             finish();
-        } else {
-            Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
         }
 
-    }
+
+        }
 
 
     // Saving spending in DAO..

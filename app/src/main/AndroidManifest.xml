@@ -24,46 +24,47 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="se.finalwork.nicetrip.handle.LoginActivity"
             android:screenOrientation="portrait"
-            android:label="Login"></activity>
+            android:label="Login"/>
 
         <activity
             android:name="se.finalwork.nicetrip.handle.RegisterPageActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.Dialog"></activity>
+            android:theme="@android:style/Theme.Holo.Light.Dialog"/>
 
         <activity
             android:name="se.finalwork.nicetrip.handle.DashboardActivity"
             android:label="@string/title_activity_first_page"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
             android:name="se.finalwork.nicetrip.handle.NewTripActivity"
             android:label="@string/title_activity_new_trip"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
             android:name="se.finalwork.nicetrip.handle.SpendingActivity"
             android:label="@string/title_activity_spending"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"/>
         <activity
             android:name="se.finalwork.nicetrip.handle.SpendListActivity"
             android:label="@string/title_activity_spend_list"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black"></activity>
+            android:theme="@android:style/Theme.Black"/>
         <activity
             android:name="se.finalwork.nicetrip.handle.TripListActivity"
             android:label="@string/title_activity_spend_list"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.NoTitleBar"/>
         <activity
             android:name="se.finalwork.nicetrip.handle.ConfigurationsActivity"
             android:theme="@style/PreferenceTheme"
             android:screenOrientation="portrait"
-            android:label="@string/title_activity_configurations"></activity>
+            android:label="@string/title_activity_configurations"/>
     </application>
 
 </manifest>
