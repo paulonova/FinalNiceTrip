@@ -32,7 +32,8 @@ public class TripListActivity extends ListActivity
 
 
     public static final String LIMIT_VALUE = "limit_value";
-    Date date;
+    public static final String CAME_FROM_TRIP_LIST = "CameFromTripList";
+    public static final String IS_FROM_TRIP_LIST = "isFromTripList";
     private AlertDialog dialogConfirmation;
     private AlertDialog alertDialog;
     private int selectedTrip;
@@ -41,12 +42,14 @@ public class TripListActivity extends ListActivity
     private Double limitValue;
     private AlertDialog alert;
     private List<Map<String, Object>> itemTrips;
-    private Trip trip;
-    private Spending spend;
 
     private long selectItemID;
     private String selectedTripDestination;
-    private long selectedDestinationId;
+    private int selectedDestinationId;
+
+    private double totalSpend;
+    private double alertLimit;
+
 
 
 
@@ -64,6 +67,8 @@ public class TripListActivity extends ListActivity
         Log.d("Limit Value Saved", "The Value is: " + value);
 
         limitValue = Double.valueOf(value);
+        setAlertLimit(limitValue);
+        Log.d("limitValue","!!!!!" + getAlertLimit());
 
         String[] from = {"image", "destiny", "date", "total", "progressBar"};
         int[] to = {R.id.type_trip, R.id.destiny, R.id.date, R.id.total, R.id.progressBar};
@@ -108,9 +113,7 @@ public class TripListActivity extends ListActivity
 
             double alert = budget * limitValue / 100;
             double totalSpend = calcTotalSpend(db, id);
-
-            // ***************************************************
-            //checkLimitBudget(totalSpend,alert);
+            setTotalSpend(totalSpend);
 
 
             Log.d("Database Info TRIP", "Info: " + "ID: " + id + " - " + "TypeTrip: " + typeTrip + " - " +
@@ -157,9 +160,6 @@ public class TripListActivity extends ListActivity
 
     // Used to get the ID from spending according to destiny
     public int returnSelectedTripId(String destiny){
-
-
-
 
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql = "SELECT _id FROM trip WHERE destiny=?";
@@ -226,12 +226,12 @@ public class TripListActivity extends ListActivity
         String destiny = (String) map.get("destiny");
 
         setSelectedTripDestination(destiny);
-        setSelectedDestinationId(returnSelectedTripId(destiny));
+        setSelectedDestinationId(returnSelectedTripId(destiny)); // get the selected trip id..
 
         // Set the selected Trip _id
         setSelectItemID(id + 1);
-        Log.d("SelectedTripID", "Destination: " + getSelectedTripDestination() + " ID: " +  returnSelectedTripId(destiny) + " ItemId: " + getSelectItemID());
-        Toast.makeText(this, "Destination: " + getSelectedTripDestination() + " ID: " +  returnSelectedTripId(destiny) + " ItemId: " + getSelectItemID(), Toast.LENGTH_SHORT).show();
+        Log.d("SelectedTripID", "Destination: " + getSelectedTripDestination() + " ID: " + returnSelectedTripId(destiny) + " ItemId: " + getSelectItemID());
+
 
     }
 
@@ -266,7 +266,12 @@ public class TripListActivity extends ListActivity
         switch (item) {
 
             case 0: // New Spend
-                startActivity(new Intent(this, SpendingActivity.class));
+                Intent spendIntent = new Intent(getApplicationContext(), SpendingActivity.class);
+                spendIntent.putExtra(CAME_FROM_TRIP_LIST, getSelectedDestinationId());  // Sending the selected trip..t
+                Log.d("Check Select Dest Id", "Value: " + getSelectedDestinationId());
+                spendIntent.putExtra(IS_FROM_TRIP_LIST, true);
+                startActivity(spendIntent);
+                finish();
                 break;
 
             case 1: //Expenses Made
@@ -311,11 +316,27 @@ public class TripListActivity extends ListActivity
         this.selectedTripDestination = selectedTripDestination;
     }
 
-    public long getSelectedDestinationId() {
+    public int getSelectedDestinationId() {
         return selectedDestinationId;
     }
 
-    public void setSelectedDestinationId(long selectedDestinationId) {
+    public void setSelectedDestinationId(int selectedDestinationId) {
         this.selectedDestinationId = selectedDestinationId;
+    }
+
+    public double getTotalSpend() {
+        return totalSpend;
+    }
+
+    public void setTotalSpend(double totalSpend) {
+        this.totalSpend = totalSpend;
+    }
+
+    public double getAlertLimit() {
+        return alertLimit;
+    }
+
+    public void setAlertLimit(double alertLimit) {
+        this.alertLimit = alertLimit;
     }
 }

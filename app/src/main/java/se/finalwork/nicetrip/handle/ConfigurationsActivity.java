@@ -18,8 +18,6 @@ public class ConfigurationsActivity extends Activity {
 
     NiceTripDB dbHelper;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

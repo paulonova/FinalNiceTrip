@@ -57,16 +57,14 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
         retrieveActualTripID();
     }
 
-    // Get from Bundle Extra the selected trip _id..
-    public long retrieveActualTripID(){
+    // Get from BundleExtra the selected trip _id..
+    public int retrieveActualTripID(){
 
         Intent i = getIntent();
         Bundle b = i.getExtras();
         if(b!=null){
-            long result = b.getLong("DestinationID");
-            //setItemId(b.getInt("ItemId"));
+            int result = b.getInt("DestinationID");
             Log.d("DestinationID", "Bundle Extra: " + result);
-            //Log.d("Item Id","Item id: " + getItemId());
             return result;
         }else {
             return 0;
@@ -74,17 +72,6 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
     }
 
     private List<Map<String, Object>> spendList() {
-
-
-        // Get the actual trip _id to save into him..
-//        SQLiteDatabase db = helper.getReadableDatabase();
-//        String sql = "SELECT _id FROM trip";
-//        Cursor c = db.rawQuery(sql, null);
-//        c.moveToLast();
-//        int id = c.getInt(0);
-//        Log.d("Test ID","ID: " + id);
-
-
 
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql1 = "SELECT _id, date, description, value, category, trip_id FROM spending WHERE trip_id=?";

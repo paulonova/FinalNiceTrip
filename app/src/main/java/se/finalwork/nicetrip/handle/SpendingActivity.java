@@ -1,12 +1,16 @@
 package se.finalwork.nicetrip.handle;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,7 +44,10 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
     private DatabaseHelper helper;
     private Spending spend;
 
+    private AlertDialog alert;
+
     private Trip trip;
+    private TripListActivity tripListActivity;
 
 
 
@@ -92,6 +99,8 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
         trip = new Trip();
 
         checkEmptyData();
+        retrieveSelectedTripID();
+        isFromTripList();
 
     }
 
@@ -102,10 +111,17 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
         Cursor cursor = db.rawQuery(sql, null);
         boolean s = cursor.moveToLast();
 
-        Log.d("Boolean"," Value: " + s);
-
-
+        Log.d("checkEmptyData"," Value: " + s);
         return s;
+    }
+
+    // Controls the limit of budget..
+    public void checkLimitBudget(double totalSpend, double alert){
+        if(totalSpend >= alert){
+            alertOmLimitValue();
+        }else{
+            // Do nothing
+        }
     }
 
 
@@ -131,7 +147,7 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
 
                 Log.d("Saved on Spending", "values: " + spend.getCategory() + " - " + spend.getDate() + " - " +
                         spend.getValue() + " - " + spend.getDescription() + " - " + spend.getPlace() + " actualID: " + spend.getTripId());
-                finish();
+//                finish();
             }catch (NumberFormatException e){
 
                 Toast.makeText(getApplicationContext(), "Spending was not saved: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -140,38 +156,103 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
 
     }
 
+    // Get from Bundle Extra the selected trip _id..
+    public int retrieveSelectedTripID(){
+
+        Intent i = getIntent();
+        Bundle b = i.getExtras();
+        if(b!=null){
+            int result = b.getInt("CameFromTripList");
+            Log.d("DestinationID", "Bundle Extra: " + result);
+            return result;
+        }else {
+            return 0;
+        }
+    }
+
+    // Get from Bundle Extra the selected trip _id..
+    public boolean isFromTripList(){
+
+        Intent i = getIntent();
+        Bundle b = i.getExtras();
+        if(b!=null){
+            boolean result = b.getBoolean("isFromTripList");
+            Log.d("isFromTripList", "Bundle Extra: " + result);
+            return result;
+        }else {
+            Log.d("isFromTripList", "Bundle Extra: " + "FALSE");
+            return false;
+        }
+    }
+
+
+
+    public void insertInSelectedTrip(String category, String date, double value,String description, String place, int itemId){
+
+
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put("category", category);
+        values.put("date", date);
+        values.put("value", value);
+        values.put("description", description);
+        values.put("place", place);
+        values.put("trip_id", itemId);
+
+        long result = db.insert("spending", null, values);
+
+        if (result != -1) {
+            Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
+            //finish();
+        } else {
+            Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
+
+        }
+
+    }
+
+
+
 
     public void saveSpending(View view) {
 
-
+        tripListActivity = new TripListActivity();
 
         if(checkEmptyData()){
 
             saveSpendingOnSpendDomain();
             SQLiteDatabase db = helper.getWritableDatabase();
 
-            ContentValues values = new ContentValues();
-            values.put("category", spend.getCategory());
-            values.put("date", spend.getDate());
-            values.put("value", spend.getValue());
-            values.put("description", spend.getDescription());
-            values.put("place", spend.getPlace());
-            values.put("trip_id", spend.getTripId());
+            if(isFromTripList()){
+                insertInSelectedTrip(spend.getCategory(), spend.getDate(), spend.getValue(), spend.getDescription(), spend.getPlace(), retrieveSelectedTripID());
+                checkLimitBudget(tripListActivity.getTotalSpend(), tripListActivity.getAlertLimit());
+                Log.d(">>>>>>>>>>", "" + spend.getCategory() + spend.getDate() + spend.getValue() +spend.getDescription() + spend.getPlace() + spend.getTripId() + retrieveSelectedTripID() );
+            }else{
+                ContentValues values = new ContentValues();
+                values.put("category", spend.getCategory());
+                values.put("date", spend.getDate());
+                values.put("value", spend.getValue());
+                values.put("description", spend.getDescription());
+                values.put("place", spend.getPlace());
+                values.put("trip_id", spend.getTripId());
 
-            // Show all information to save in DB..
-            Log.d("Saved Informations", "Info: " + category.getSelectedItem().toString() + " - " + selectedDate + " - " +
-                    value.getText().toString() + " - " + description.getText().toString() + " - " +
-                    place.getText().toString() + " - " + spend.getTripId());
+                // Show all information to save in DB..
+                Log.d("Saved Informations", "Info: " + category.getSelectedItem().toString() + " - " + selectedDate + " - " +
+                        value.getText().toString() + " - " + description.getText().toString() + " - " +
+                        place.getText().toString() + " - " + spend.getTripId());
 
 
-            long result = db.insert("spending", null, values);
+                long result = db.insert("spending", null, values);
 
-            if (result != -1) {
-                Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
+                if (result != -1) {
+                    Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
+                    //checkLimitBudget(tripListActivity.getTotalSpend(), tripListActivity.getAlertLimit());
+                    //finish();
+                } else {
+                    Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
 
+                }
             }
 
         }else {
@@ -180,37 +261,8 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
         }
 
 
-        }
-
-
-    // Saving spending in DAO..
-    public void setSpendDomainInfo(){
-        spend = new Spending();
-
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "SELECT _id, category, date, value, description, place, trip_id FROM spending";
-        Cursor cursor = db.rawQuery(sql, null);
-        cursor.moveToFirst();
-
-        for (int i = 0; i < cursor.getCount(); i++) {
-
-            spend.setId(cursor.getInt(0));
-            spend.setCategory(cursor.getString(1));
-            spend.setDate(cursor.getString(2));
-            spend.setValue(cursor.getDouble(3));
-            spend.setDescription(cursor.getString(4));
-            spend.setPlace(cursor.getString(5));
-            spend.setTripId(cursor.getInt(6));
-            cursor.moveToNext();
-
-
-            Log.d("SetSpendingDomainInfo", " INFO: SPENDING_DOMAIN " + spend.getId() + " - " + spend.getCategory() + " - " + spend.getDate() + " - " +
-                                                                       spend.getValue() + " - " + spend.getDescription() + " - " + spend.getPlace() + " - " +
-                                                                       spend.getTripId());
-        }
-
-        cursor.close();
     }
+
 
 
     public void updateDate() {
@@ -273,6 +325,23 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void alertOmLimitValue() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Limit Alert");
+        builder.setMessage(R.string.limit_alert);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        alert = builder.create();
+        alert.show();
+
     }
 
 

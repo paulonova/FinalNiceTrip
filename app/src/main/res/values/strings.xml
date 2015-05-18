@@ -105,7 +105,7 @@
 
     <string name="close_alert">This application will close! Are you sure?</string>
     <string name="database_alert">Database Alert!</string>
-    <string name="limit_alert">You are near to exceed your spending limit..</string>
+    <string name="limit_alert">You are exceed your spendings limit.. Please check your wallet or change the "limit value" in Configurations</string>
     <string name="error_empty">The fields can not be empty</string>
     <string name="error_autentication">Username or Password is wrong! Please, try again..</string>
     <string name="register_error">username or password is empty..</string>

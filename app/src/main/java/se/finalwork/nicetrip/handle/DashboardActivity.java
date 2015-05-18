@@ -33,9 +33,7 @@ public class DashboardActivity extends Activity {
         String value = preferences.getString("value_limit", "null");
         Log.d("Limit Value Saved", "The Value is: " + value);
 
-//        SharedPreferences preferenceSettings = getPreferences(PREFERENCE_MODE_PRIVATE);
-//        resultPreference = preferenceSettings.getString("value_limit", "null");
-//        Log.d("valueLimit01", "LimitValue Check01: " + getResultPreference());
+
 
         if(value.contains("null")){
             sharedPreferencesEditor = preferences.edit();
@@ -75,10 +73,7 @@ public class DashboardActivity extends Activity {
                 break;
         }
 
-        //  Shows a Message Toast with the selected item..
-         /* TextView textView = (TextView) v;
-            String option = "Option: " + textView.getText().toString();
-            Toast.makeText(this, option, Toast.LENGTH_LONG).show(); */
+
     }
 
     // Method to show the menu with exit button..

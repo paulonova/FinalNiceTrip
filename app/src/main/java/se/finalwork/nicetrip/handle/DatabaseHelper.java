@@ -32,6 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " description TEXT, place TEXT, trip_id INTEGER," +
                 " FOREIGN KEY(trip_id) REFERENCES trip(_id));");
 
+
     }
 
     @Override
