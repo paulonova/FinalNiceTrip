@@ -9,8 +9,8 @@ import android.view.MotionEvent;
 
 public class SplashActivity extends Activity {
 
-    protected boolean _active = true;
-    protected int _splashTime = 2000; // time to display the splash screen in ms
+    private boolean _active = true;
+    private int _splashTime = 2000; // time to display the splash screen in ms
 
 
     @Override

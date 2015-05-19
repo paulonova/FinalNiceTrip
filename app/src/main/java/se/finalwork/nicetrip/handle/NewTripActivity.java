@@ -156,38 +156,7 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
     }
 
 
-
-    // Take saved trip from Database and save it again att the Trip object..
-    public void setTripDomainInfo(){
-        SQLiteDatabase db = helper.getReadableDatabase();
-        String sql = "SELECT _id, type_trip, destiny, arrive_date, exit_date, budget, number_peoples FROM trip";
-        Cursor cursor = db.rawQuery(sql, null);
-        cursor.moveToFirst();
-        trip = new Trip();
-
-        for (int i = 0; i < cursor.getCount(); i++) {
-
-            trip.setId(cursor.getInt(0));
-            trip.setTypeTrip(cursor.getString(1));
-            trip.setDestiny(cursor.getString(2));
-            trip.setArrivalDate(cursor.getString(3));
-            trip.setExitDate(cursor.getString(4));
-            trip.setBudget(cursor.getDouble(5));
-            trip.setNumberPeoples(cursor.getInt(6));
-            trip.setActualTrip(trip.getId());
-
-            cursor.moveToNext();
-
-        }
-
-        cursor.close();
-        Log.d("SetTripDomainInfo", " INFO: TRIP_DOMAIN " + trip.getId() + " - " + trip.getTypeTrip() + " - " + trip.getDestiny() + " - " + trip.getArrivalDate()
-                + " - " + trip.getExitDate() + " - " + trip.getBudget() + " - " + trip.getNumberPeoples() + "  Actual trip: " + trip.getActualTrip());
-    }
-
-
-
-    // Button SAVE TRIP..
+    // Button SAVE YOUR TRIP..
     public void saveTrip(View view) {
 
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -228,16 +197,44 @@ public class NewTripActivity extends Activity implements View.OnClickListener {
             Toast.makeText(this, "Register NOT saved! " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-
         // Get the current trip ID
         String sql = "SELECT _id FROM trip";
         Cursor cursor = db.rawQuery(sql, null);
         cursor.moveToLast();
         trip.setActualTrip(cursor.getInt(0));
-        Log.d("setActualTrip"," TESTE ATUAL " + cursor.getInt(0));
+        Log.d("setActualTrip"," Actual Test " + cursor.getInt(0));
         setTripDomainInfo();
 
     }
+
+    // Take saved trip from Database and save it again att the Trip object..
+    public void setTripDomainInfo(){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String sql = "SELECT _id, type_trip, destiny, arrive_date, exit_date, budget, number_peoples FROM trip";
+        Cursor cursor = db.rawQuery(sql, null);
+        cursor.moveToFirst();
+        trip = new Trip();
+
+        for (int i = 0; i < cursor.getCount(); i++) {
+
+            trip.setId(cursor.getInt(0));
+            trip.setTypeTrip(cursor.getString(1));
+            trip.setDestiny(cursor.getString(2));
+            trip.setArrivalDate(cursor.getString(3));
+            trip.setExitDate(cursor.getString(4));
+            trip.setBudget(cursor.getDouble(5));
+            trip.setNumberPeoples(cursor.getInt(6));
+            trip.setActualTrip(trip.getId());
+
+            cursor.moveToNext();
+
+        }
+
+        cursor.close();
+        Log.d("SetTripDomainInfo", " INFO: TRIP_DOMAIN " + trip.getId() + " - " + trip.getTypeTrip() + " - " + trip.getDestiny() + " - " + trip.getArrivalDate()
+                + " - " + trip.getExitDate() + " - " + trip.getBudget() + " - " + trip.getNumberPeoples() + "  Actual trip: " + trip.getActualTrip());
+    }
+
 
 
 

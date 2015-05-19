@@ -1,6 +1,8 @@
 package se.finalwork.nicetrip.handle;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,6 +35,8 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
     private String selectedDescription;
     private int selectedIdSpend;
     private int ItemId;
+
+    private AlertDialog alert;
 
 
 
@@ -127,43 +131,53 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
 
         Map<String, Object> map = spend.get(position);
         setSelectedDescription((String) map.get("description"));
-
-        String message = "Selected expense: " + getSelectedDescription() + " expenses: " + id ;
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        alertBeforeClose();
+        //Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    /**
+     * Method to use when onBackPressed() is used.
+     */
+    public void alertBeforeClose() {
 
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_spend_list, menu);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Alert");
+        builder.setMessage(R.string.delete_spendings);
 
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
 
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SQLiteDatabase db = helper.getReadableDatabase();
+                long result = db.delete("spending", "description=?", new String[]{getSelectedDescription()});
+                if (result != -1) {
+                    Toast.makeText(getApplicationContext(), "Spend Removed..", Toast.LENGTH_SHORT).show();
+                    getListView().invalidateViews();
+                    spend.remove(getListView());
+                    finish();
 
+                } else {
+                    Toast.makeText(getApplicationContext(), "Spend NOT Removed..", Toast.LENGTH_SHORT).show();
+                }
+
+                Intent intent = new Intent(getApplicationContext(), TripListActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do Nothing
+            }
+        });
+
+        alert = builder.create();
+        alert.show();
     }
 
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-//        if (item.getItemId() == R.id.remove_spending) {
-//            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-//            spend.remove(info.position);
-//            getListView().invalidateViews();
-//            dateBefore = "";
-//
-            //Remove from Database
-//            Toast.makeText(getApplicationContext(), "Remove from Database..", Toast.LENGTH_SHORT).show();
-//            return true;
-//        }
 
-        //Remove from Database
-        SQLiteDatabase db = helper.getReadableDatabase();
-        db.delete("spending", "description=?", new String[]{getSelectedDescription()});
-        getListView().invalidateViews();
-        Toast.makeText(getApplicationContext(), "Spend Removed..", Toast.LENGTH_SHORT).show();
-        return true;
-
-        //return super.onContextItemSelected(item);
-    }
 
     private class SpendViewBinder implements SimpleAdapter.ViewBinder {
 

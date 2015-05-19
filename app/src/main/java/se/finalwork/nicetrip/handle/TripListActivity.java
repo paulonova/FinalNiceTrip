@@ -83,12 +83,6 @@ public class TripListActivity extends ListActivity
 
     }
 
-    // Controls the limit of budget..
-    public void checkLimitBudget(double totalSpend, double alert){
-        if(totalSpend >= alert){
-            alertOmLimitValue();
-        }
-    }
 
     private List<Map<String, Object>> listTrips() {
 
@@ -132,8 +126,7 @@ public class TripListActivity extends ListActivity
             item.put("destiny", destiny);
             item.put("date", arrivalDate + " to " + exitDate);
 
-
-            item.put("total", "Total Spend: " + totalSpend + "   Total peoples: " + numberPeoples);
+            item.put("total", "Total Spend: " + totalSpend + "    Budget: " + budget);
             Log.d("TOTAL_SPEND", "TOTAL: " + totalSpend);
 
             Double[] values = new Double[]{budget, alert, totalSpend};
@@ -145,20 +138,11 @@ public class TripListActivity extends ListActivity
 
         }
 
-        // Old testing codes..
-//        Map<String, Object> item = new HashMap<String, Object>();
-//        item.put("image", R.drawable.business);
-//        item.put("destiny", "Stockholm");
-//        item.put("date", "02/02/2015 to 05/02/2015");
-//        item.put("total", "Total Spend: Kr 314,00");
-//        item.put("progressBar", new Double[]{500.0, 450.0, 314.0});
-//        itemTrips.add(item);
-
         cursor.close();
         return itemTrips;
     }
 
-    // Used to get the ID from spending according to destiny
+    // Used to get the ID from trip according to destiny
     public int returnSelectedTripId(String destiny){
 
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -181,22 +165,22 @@ public class TripListActivity extends ListActivity
         return total;
     }
 
-    public void alertOmLimitValue() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Limit Alert");
-        builder.setMessage(R.string.limit_alert);
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-        alert = builder.create();
-        alert.show();
-
-    }
+//    public void alertOmLimitValue() {
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setTitle("Limit Alert");
+//        builder.setMessage(R.string.limit_alert);
+//        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//
+//            }
+//        });
+//        alert = builder.create();
+//        alert.show();
+//
+//    }
 
 
     @Override
@@ -280,6 +264,7 @@ public class TripListActivity extends ListActivity
                 intent.putExtra("DestinationID", getSelectedDestinationId());  // Sending the selected trip..
                 intent.putExtra("ItemId", getSelectItemID());
                 startActivity(intent);
+                finish();
                 break;
 
             case 2: //Remove

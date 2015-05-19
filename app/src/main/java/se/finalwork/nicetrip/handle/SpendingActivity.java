@@ -49,6 +49,8 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
     private Trip trip;
     private TripListActivity tripListActivity;
 
+    private String valueLimit;
+
 
 
     Calendar calendar = Calendar.getInstance();
@@ -102,8 +104,19 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
         retrieveSelectedTripID();
         isFromTripList();
 
+
+        // Instantiate SharedPreferences and retrieve the limit value of the budget..
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        valueLimit = preferences.getString("value_limit", "null");
+        Log.d("Limit Value Saved", "from SpendingActivity: " + valueLimit);
+
+
+        tripListActivity = new TripListActivity();
+        Log.d("CheckLimitBudget", "OnCreate: " + tripListActivity.getTotalSpend() + " " + tripListActivity.getAlertLimit());
+
     }
 
+    // Check if we have a trip registered..
     public boolean checkEmptyData(){
         // Get the actual id..
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -140,7 +153,13 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
                 spend = new Spending();
                 spend.setCategory(category.getSelectedItem().toString());
                 spend.setDate(selectedDate);
-                spend.setValue(Double.parseDouble(value.getText().toString()));
+
+                if(value.getText().toString().equals("")){
+                    spend.setValue(0d);
+                }else{
+                    spend.setValue(Double.parseDouble(value.getText().toString()));
+                }
+
                 spend.setDescription(description.getText().toString());
                 spend.setPlace(place.getText().toString());
                 spend.setTripId(tripId);
@@ -151,7 +170,7 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
             }catch (NumberFormatException e){
 
                 Toast.makeText(getApplicationContext(), "Spending was not saved: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-
+                Log.d("Spending not saved: ", ">>: " + e.getMessage());
             }
 
     }
@@ -170,6 +189,7 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
         }
     }
 
+
     // Get from Bundle Extra the selected trip _id..
     public boolean isFromTripList(){
 
@@ -185,8 +205,7 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
         }
     }
 
-
-
+    // Used to save spendings in the selected trip from TripList Activity..
     public void insertInSelectedTrip(String category, String date, double value,String description, String place, int itemId){
 
 
@@ -226,8 +245,10 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
 
             if(isFromTripList()){
                 insertInSelectedTrip(spend.getCategory(), spend.getDate(), spend.getValue(), spend.getDescription(), spend.getPlace(), retrieveSelectedTripID());
-                checkLimitBudget(tripListActivity.getTotalSpend(), tripListActivity.getAlertLimit());
+                //checkLimitBudget(tripListActivity.getTotalSpend(), tripListActivity.getAlertLimit());
+                Log.d("CheckLimitBudget", "From isFromTripList");
                 Log.d(">>>>>>>>>>", "" + spend.getCategory() + spend.getDate() + spend.getValue() +spend.getDescription() + spend.getPlace() + spend.getTripId() + retrieveSelectedTripID() );
+                finish();
             }else{
                 ContentValues values = new ContentValues();
                 values.put("category", spend.getCategory());
@@ -248,7 +269,9 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
                 if (result != -1) {
                     Toast.makeText(this, "Register saved successfully..", Toast.LENGTH_SHORT).show();
                     //checkLimitBudget(tripListActivity.getTotalSpend(), tripListActivity.getAlertLimit());
-                    //finish();
+                    Log.d("CheckLimitBudget", "From common place " + tripListActivity.getTotalSpend() + " " + tripListActivity.getAlertLimit());
+                    finish();
+
                 } else {
                     Toast.makeText(this, "Register NOT saved! ", Toast.LENGTH_SHORT).show();
 
@@ -336,7 +359,7 @@ public class SpendingActivity extends Activity { //implements View.OnClickListen
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+                Log.d("ON CLICK"," GONE!");
             }
         });
         alert = builder.create();

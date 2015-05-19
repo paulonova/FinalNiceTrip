@@ -104,6 +104,7 @@
     <string name="title_activity_configurations">Configurations</string>
 
     <string name="close_alert">This application will close! Are you sure?</string>
+    <string name="delete_spendings">Spending will be deleted! Are you sure?</string>
     <string name="database_alert">Database Alert!</string>
     <string name="limit_alert">You are exceed your spendings limit.. Please check your wallet or change the "limit value" in Configurations</string>
     <string name="error_empty">The fields can not be empty</string>

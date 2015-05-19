@@ -33,8 +33,6 @@ public class DashboardActivity extends Activity {
         String value = preferences.getString("value_limit", "null");
         Log.d("Limit Value Saved", "The Value is: " + value);
 
-
-
         if(value.contains("null")){
             sharedPreferencesEditor = preferences.edit();
             sharedPreferencesEditor.putString("value_limit", limitValuePreference);
@@ -81,7 +79,6 @@ public class DashboardActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.dashbord_menu, menu);
-        //getMenuInflater().inflate(R.menu.menu_first_page, menu);
         return true;
     }
 
