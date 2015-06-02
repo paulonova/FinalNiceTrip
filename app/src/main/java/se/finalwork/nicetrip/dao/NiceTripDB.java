@@ -51,60 +51,6 @@ public class NiceTripDB  {
 
     }
 
-    // Get data
-    public Cursor getData(int id){
-        SQLiteDatabase db = this. dbHelper.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from contacts where id="+id, null );
-        return res;
-    }
 
-    public int getActualTripId(){
-
-        // Get the actual id..
-        SQLiteDatabase db = this. dbHelper.getReadableDatabase();
-        String sql = "SELECT _id FROM trip";
-        Cursor cursor = db.rawQuery(sql, null);
-        cursor.moveToLast();
-
-        int id = cursor.getInt(0);
-        Log.d("Test ID","ID: " + id);
-        return id;
-    }
-
-
-
-    public void deleteTrip  (Trip trip){
-
-        ContentValues values = new ContentValues();
-
-        db.delete(Trip.TABLE, "_id =" + trip.getId(), null);
-    }
-
-//    public Integer deleteContact (Integer id)  {
-//        SQLiteDatabase db = this.dbHelper.getWritableDatabase();
-//        return db.delete("contacts", "id = ? ", new String[] { Integer.toString(id) }); // to convert to String..
-//    }
-
-
-
-
-
-
-//    // id value connect Spending with Trip..
-//    public void insertSpending (Spending spend, int id){
-//
-//
-//        ContentValues values = new ContentValues();
-//
-//        values.put(Spending.CATEGORY, spend.getCategory());
-//        values.put(Spending.DATE, spend.getDate());
-//        values.put(Spending.VALUE, spend.getValue());
-//        values.put(Spending.DESCRIPTION, spend.getDescription());
-//        values.put(Spending.PLACE, spend.getPlace());
-//        values.put(Spending.TRIP_ID, id);
-//
-//        db.insert(Spending.TABLE, null, values);
-//
-//    }
 
 }

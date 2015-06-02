@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">NiceTrip</string>
+    <string name="app_name">Nice Trip</string>
     <string name="registerPage">Register</string>
     <string name="action_settings">Settings</string>
 
     <string name="developer">Developed by PauloNova</string>
     <string name="register">Click here to Registration</string>
     <string name="title_activity_register_page">RegisterPageActivity</string>
-    <string name="title_activity_first_page">FirstPage</string>
-    <string name="hello_world">Welcome to the First Page !!!</string>
+    <string name="title_activity_first_page">Nice Trip</string>
 
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
