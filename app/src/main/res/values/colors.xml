@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
     <color name="title">#8b691d</color>
     <color name="category_feeding">#eae37d</color>
@@ -9,5 +10,6 @@
 
     <color name="black_color">#fe000000</color>
     <color name="orange_color">#ffffae00</color>
+
 
 </resources>

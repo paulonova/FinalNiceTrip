@@ -77,15 +77,16 @@ public class DashboardActivity extends Activity {
     // Method to show the menu with exit button..
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.dashbord_menu, menu);
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.dashbord_menu, menu);
         return true;
+
     }
 
 
     @Override
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
-        finish();
+//        finish();
         return true;
     }
 

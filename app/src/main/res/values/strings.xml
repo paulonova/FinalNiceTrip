@@ -113,6 +113,9 @@
     <string name="money">$ </string>
     <string name="delete_database_alert">Database will be deleted and restored! Are you sure?  </string>
     <string name="no_trip_msg">There is no Trip registered in database, please create first a Trip..</string>
+    <string name="title_activity_nice_trip_map">NiceTrip_map</string>
+
+    <string name="hello_world">Hello world!</string>
 
 
 </resources>

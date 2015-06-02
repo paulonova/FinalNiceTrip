@@ -59,8 +59,8 @@
             android:id="@+id/my_trips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/new_spending"
-            android:layout_alignStart="@id/new_spending"
+            android:layout_alignLeft="@id/new_trips"
+            android:layout_alignStart="@id/new_trips"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="120dp"
             android:clickable="true"
@@ -74,14 +74,15 @@
             android:id="@+id/configurations"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/my_trips"
-            android:layout_alignRight="@id/new_trips"
             android:clickable="true"
             android:drawableTop="@drawable/configurations"
             android:onClick="selectOption"
             android:text="@string/configuration"
             android:textColor="#FFFFFF"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_alignBottom="@+id/my_trips"
+            android:layout_alignRight="@+id/new_spending"
+            android:layout_alignEnd="@+id/new_spending" />
 
 
     </RelativeLayout>

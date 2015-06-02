@@ -156,11 +156,13 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
                     spend.remove(getListView());
                     finish();
 
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Spend NOT Removed..", Toast.LENGTH_SHORT).show();
                 }
 
                 Intent intent = new Intent(getApplicationContext(), TripListActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
                 startActivity(intent);
             }
         });
@@ -205,6 +207,18 @@ public class SpendListActivity extends ListActivity implements AdapterView.OnIte
             return false;
         }
     }
+
+
+    @Override
+    public void onBackPressed() {
+        finish();
+//        Intent intent = new Intent(getApplicationContext(), TripListActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
+//        startActivity(intent);
+
+    }
+
+
 
     public String getSelectedDescription() {
         return selectedDescription;
