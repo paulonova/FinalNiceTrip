@@ -13,6 +13,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import se.finalwork.nicetrip.maps.MapsActivity;
+
 
 public class DashboardActivity extends Activity {
 
@@ -51,6 +53,11 @@ public class DashboardActivity extends Activity {
         Log.d("Limit Value Saved", "The Value is: " + value);
         Log.d("Limit Value Saved", "The limitValuePreference is: " + limitValuePreference);
 
+    }
+
+    public void googleMaps(View v){
+        Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+        startActivity(intent);
     }
 
 

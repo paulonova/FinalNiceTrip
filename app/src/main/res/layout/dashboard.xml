@@ -12,6 +12,7 @@
         android:layout_height="71dp"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
+        android:onClick="googleMaps"
         android:layout_marginTop="10dp"
         android:src="@drawable/nicetrip_text" />
 

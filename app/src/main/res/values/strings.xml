@@ -116,6 +116,7 @@
     <string name="title_activity_nice_trip_map">NiceTrip_map</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_maps">NiceTripMaps</string>
 
 
 </resources>
